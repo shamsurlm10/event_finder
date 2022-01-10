@@ -1,0 +1,165 @@
+{% extends "admins/admin-layout.html" %}
+
+{% block title %} Admin dashboard {% endblock %}
+
+{% block admin_contents %}
+<div class="card card-body shadow-card system-status">
+    System Status
+</div>
+<div class="row mt-3">
+    <div class="text-center">
+        <div id="piechart"></div>
+    </div>
+
+</div>
+<div class="row mt-3">
+    <div class="col-md-6">
+        <a href="{{ url_for('admins.pending_request') }}" class="card-link-a">
+            <div class="card card-body card-link">
+                <div class="d-flex flex-column">
+                    <div class="ms-auto"><i class="fas fa-external-link-alt"></i></div>
+                    <div class="text-center card-details">{{ length_of_req_pending }}</div>
+                    <div class="text-center">Total Pending Approvals</div>
+                </div>
+            </div>
+        </a>
+    </div>
+    <div class="col-md-6">
+        <a href="{{ url_for('admins.complain_box') }}" class="card-link-a">
+            <div class="card card-body card-link">
+                <div class="d-flex flex-column">
+                    <div class="ms-auto"><i class="fas fa-external-link-alt"></i></div>
+                    <div class="text-center card-details">{{ length_of_complains }}</div>
+                    <div class="text-center">Total Unsolve Complains</div>
+                </div>
+            </div>
+        </a>
+    </div>
+</div>
+<div class="mt-3">
+    <form action="{{ url_for('admins.get_profile_by_profile_id') }}" class="d-flex" method="POST">
+        <input class="form-control me-2 input-box" type="text" placeholder="Enter the profile ID"
+            name="get_by_profile_id">
+        <button class="btn btn-dark btn-search" type="submit">Get User by Profile ID</button>
+    </form>
+    <form action="{{ url_for('admins.get_profile_by_user_id') }}" class="d-flex mt-2" method="POST">
+        <input class="form-control me-2 input-box" type="text" placeholder="Enter the user ID" name="get_by_user_id">
+        <button class="btn btn-dark btn-search" type="submit">Get User by User ID</button>
+    </form>
+    <form action="{{ url_for('admins.get_profile_by_email_id') }}" class="d-flex mt-2" method="POST">
+        <input class="form-control me-2 input-box" type="email" placeholder="Enter the user email address"
+            name="get_by_email_id">
+        <button class="btn btn-dark btn-search" type="submit">Get User by Email</button>
+    </form>
+    <form action="{{ url_for('admins.get_profile_by_nid_id') }}" class="d-flex mt-2" method="POST">
+        <input class="form-control me-2 input-box" type="text" placeholder="Enter the user NID number"
+            name="get_by_nid_id">
+        <button class="btn btn-dark btn-search" type="submit">Get User by NID</button>
+    </form>
+    <!-- Users -->
+    <div class="d-flex align-items-center mt-4 mb-3">
+        <div class="flex-grow-1">
+            <h1 class="profile-header user-font">New Users</h1>
+        </div>
+        <a href="{{url_for('users.get_users')}}" class="text-reset">View all</a>
+    </div>
+    <div class="row">
+        {% for user in users %}
+        <div class="mb-2 col-md-12 col-lg-6">
+            <div class="px-1">
+                <div class="card card-body shadow-card">
+                    <div class="d-flex flex-row">
+                        <img src="{{ url_for('static', filename=user.profile.profile_photo) }}" alt=""
+                            class="card-img align-self-center">
+                        <a href="{{ url_for('profiles.view_profile', id=user.profile.id) }}"
+                            class="d-flex flex-column align-self-center card-link-custom ms-3">
+                            <h2 class="card-title-custom my-0">{{ user.profile.get_fullname() }}</h2>
+                            <p class="card-body-custom my-0 text-muted">Joined on {{ user.get_joindate() }}</p>
+                            <p class="card-body-custom my-0"><i class="fas fa-external-link-alt"></i></p>
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+    <!-- Events -->
+    <div class="d-flex align-items-center mt-4 mb-3">
+        <div class="flex-grow-1">
+            <h1 class="profile-header user-font">Newly created events</h1>
+        </div>
+        <a href="{{url_for('events.get_events')}}" class="text-reset">View all</a>
+    </div>
+    <div class="row row-cols-1 row-cols-md-2 g-4">
+        {% for event in events %}
+        <div class="col">
+            <div class="card shadow-card event-card h-100">
+                <img src="{{ url_for('static', filename=event.cover_photo) }}" class="card-img-top event-card-img"
+                    alt="Cover photo of the event">
+                <div class="card-body">
+                    <h6 class="card-title fw-bold">{{ event.title }}</h6>
+                    <div class="card-text text-{{ event.event_status().category }} fw-bold mb-1">
+                        {{ event.event_status().message }}
+                    </div>
+                    <div class="card-text">
+                        <strong>
+                            <i class="fas fa-map-marker-alt"></i> Location:
+                        </strong>
+                        {{ event.place_name }}
+                    </div>
+                    <div class="card-text">
+                        <strong>
+                            <i class="fas fa-clock"></i> Date:
+                        </strong>
+                        {{ event.get_start_date() }} at {{ event.get_start_time() }}
+                    </div>
+                    <div class="card-text">
+                        <strong>
+                            <i class="fas fa-user-tie"></i> Host:
+                        </strong>
+                        <a href="{{ url_for('profiles.view_profile', id=event.host.id) }}" class="text-reset">
+                            {{ event.host.get_fullname() }}
+                        </a>
+                    </div>
+                    <div class="card-text">
+                        <strong>
+                            <i class="fas fa-money-check-alt"></i> Register Fee:
+                        </strong>
+                        {{ event.fee }} Taka
+                    </div>
+                    <div class="card-text">
+                        <strong>
+                            <i class="fas fa-users"></i> Members:
+                        </strong>
+                        {{ len(event.members) if event.members else 0 }} out of {{ event.max_member }}
+                    </div>
+                    <a href="{{ url_for('events.view_event', id=event.id) }}" class="btn btn-dark w-100 btn-sm mt-3">
+                        Explore the event
+                    </a>
+                </div>
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+    <!-- Scripts for Pie Chart -->
+    <script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
+    <script type="text/javascript">
+        google.charts.load('current', { 'packages': ['corechart'] });
+        google.charts.setOnLoadCallback(drawChart);
+
+        function drawChart() {
+            var data = google.visualization.arrayToDataTable([
+                ['Category', 'Number of users'],
+                {% for key, value in data.items() %}
+        ["{{key}}", {{ value }}],
+            {% endfor %}
+        ]);
+        var options = {
+            title: 'Server User Details',
+            is3D: true,
+        };
+        var chart = new google.visualization.PieChart(document.getElementById('piechart'));
+        chart.draw(data, options);
+    }
+    </script>
+    {% endblock %}

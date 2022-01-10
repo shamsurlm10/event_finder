@@ -1,0 +1,141 @@
+{% extends "layout.html" %}
+
+{% block title %} Register a new account {% endblock %}
+
+{% block content %}
+<div class="container form-brand">
+    <div class="row">
+        <div class="col-xl-6 offset-xl-3 col-md-8 offset-md-2">
+            <div class="text-center">
+                <img src="{{ url_for('static', filename='images/default/Logos/FINDER-Dark.png') }}" alt="Brand Logo"
+                    width="180px">
+            </div>
+            <div class="mt-4">
+                <div class="card card-body shadow-card p-4">
+                    <form method="POST">
+                        {{ form.hidden_tag() }}
+                        <div class="row g-2">
+                            <div class="col">
+                                {{ form.first_name.label(class="form-label mb-0") }}
+                                {% if form.first_name.errors %}
+                                {{ form.first_name(class="form-control input-box is-invalid")}}
+                                <div class="invalid-feedback">
+                                    {% for error in form.first_name.errors %}
+                                    <span>{{ error }}</span>
+                                    {% endfor %}
+                                </div>
+                                {% else %}
+                                {{ form.first_name(class="form-control input-box", id="first_name") }}
+                                {% endif %}
+                            </div>
+                            <div class="col">
+                                {{ form.last_name.label(class="form-label mb-0") }}
+                                {% if form.last_name.errors %}
+                                {{ form.last_name(class="form-control input-box is-invalid")}}
+                                <div class="invalid-feedback">
+                                    {% for error in form.last_name.errors %}
+                                    <span>{{ error }}</span>
+                                    {% endfor %}
+                                </div>
+                                {% else %}
+                                {{ form.last_name(class="form-control input-box", id="last_name") }}
+                                {% endif %}
+                            </div>
+                        </div>
+                        <div class="mt-2">
+                            {{ form.email.label(class="form-label mb-0") }}
+                            {% if form.email.errors %}
+                            {{ form.email(class="form-control input-box is-invalid")}}
+                            <div class="invalid-feedback">
+                                {% for error in form.email.errors %}
+                                <span>{{ error }}</span>
+                                {% endfor %}
+                            </div>
+                            {% else %}
+                            {{ form.email(class="form-control input-box", id="email") }}
+                            {% endif %}
+                        </div>
+                        <div class="row g-2 mt-1">
+                            <div class="col">
+                                {{ form.dob.label(class="form-label mb-0") }}
+                                {% if form.dob.errors %}
+                                {{ form.dob(class="form-control input-box is-invalid")}}
+                                <div class="invalid-feedback">
+                                    {% for error in form.dob.errors %}
+                                    <span>{{ error }}</span>
+                                    {% endfor %}
+                                </div>
+                                {% else %}
+                                {{ form.dob(class="form-control input-box", id="dob") }}
+                                {% endif %}
+                            </div>
+                            <div class="col">
+                                {{ form.gender.label(class="form-label mb-0") }}
+                                {% if form.gender.errors %}
+                                {{ form.gender(class="form-control input-box is-invalid")}}
+                                <div class="invalid-feedback">
+                                    {% for error in form.gender.errors %}
+                                    <span>{{ error }}</span>
+                                    {% endfor %}
+                                </div>
+                                {% else %}
+                                {{ form.gender(class="form-control input-box", id="gender") }}
+                                {% endif %}
+                            </div>
+                        </div>
+                        <div class="mt-2">
+                            {{ form.password.label(class="form-label mb-0") }}
+                            {% if form.password.errors %}
+                            {{ form.password(class="form-control input-box is-invalid")}}
+                            <div class="invalid-feedback">
+                                {% for error in form.password.errors %}
+                                <span>{{ error }}</span>
+                                {% endfor %}
+                            </div>
+                            {% else %}
+                            {{ form.password(class="form-control input-box", id="password") }}
+                            {% endif %}
+                        </div>
+                        <div class="mt-2">
+                            {{ form.c_password.label(class="form-label mb-0") }}
+    
+                            {% if form.c_password.errors %}
+                            {{ form.c_password(class="form-control input-box is-invalid")}}
+                            <div class="invalid-feedback">
+                                {% for error in form.c_password.errors %}
+                                <span>{{ error }}</span>
+                                {% endfor %}
+                            </div>
+                            {% else %}
+                            {{ form.c_password(class="form-control input-box", id="c_password") }}
+                            {% endif %}
+                        </div>
+                        <div div class="mt-2">
+                            {{ form.condition_check(class="form-check-input") }}
+                            {% if form.condition_check.errors %}
+                            {{ form.condition_check(class="form-control input-box is-invalid")}}
+                            <div class="invalid-feedback">
+                                {% for error in form.condition_check.errors %}
+                                <span>{{ error }}</span>
+                                {% endfor %}
+                            </div>
+                            {% else %}
+                            {{ form.condition_check.label(class="form-check-label") }}
+                            {% endif %}
+                            <a href="#" class="link-dark">terms and condition</a>
+                        </div>
+                        <div class="mt-2">
+                            {{form.submit(class="btn btn-dark form-control")}}
+                        </div>
+                    </form>
+                    <div class="mt-2">
+                        Already got an account? <a href="{{ url_for('users.login_user') }}" class="link-dark"
+                            style="text-decoration: none"><b>Login!</b></a>
+                    </div>
+                </div>
+                
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

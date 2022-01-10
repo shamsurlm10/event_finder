@@ -1,0 +1,116 @@
+{% extends "profiles/account-settings-layout.html" %}
+
+{% block title %} Change photos {% endblock %}
+
+{% block settings %}
+<h2 class="settings-header">Change Photo</h2>
+<div class="card card-body shadow-card p-4">
+    <form method="POST" enctype="multipart/form-data">
+        {{ form.hidden_tag() }}
+        <div>
+            {{ form.cover_photo.label(class="form-label mb-0") }} <br>
+            <img src="{{url_for('static', filename=current_user.profile.cover_photo)}}" alt="Cover Photo"
+                class="cover-photo">
+            <div class="mt-2">
+                {% if form.cover_photo.errors %}
+                <div class="d-flex">
+                    {{ form.cover_photo(class="form-control is-invalid", id="cover_photo")}}
+                    <button type="button" class="btn btn-danger ms-2" data-bs-toggle="modal"
+                        data-bs-target="#delete-cover-modal">Delete</button>
+                </div>
+                <div class="invalid-feedback">
+                    {% for error in form.cover_photo.errors %}
+                    <span>{{ error }}</span>
+                    {% endfor %}
+                </div>
+                {% else %}
+                <div class="d-flex">
+                    {{ form.cover_photo(class="form-control", id="cover_photo") }}
+                    <button type="button" class="btn btn-danger ms-2" data-bs-toggle="modal"
+                        data-bs-target="#delete-cover-modal">Delete</button>
+                </div>
+                {% endif %}
+            </div>
+        </div>
+        <div class="mt-4">
+            {{ form.profile_photo.label(class="form-label mb-0") }} <br>
+            <div class="text-center">
+                <img src="{{url_for('static', filename=current_user.profile.profile_photo)}}" alt="Profile Photo"
+                    class="rounded-circle profile-photo">
+            </div>
+            <div class="mt-2">
+                {% if form.profile_photo.errors %}
+                <div class="d-flex">
+                    {{ form.profile_photo(class="form-control is-invalid", id="profile_photo")}}
+                    <button type="button" class="btn btn-danger ms-2" data-bs-toggle="modal"
+                        data-bs-target="#delete-profile-modal">
+                        Delete
+                    </button>
+                    <div class="invalid-feedback">
+                        {% for error in form.profile_photo.errors %}
+                        <span>{{ error }}</span>
+                        {% endfor %}
+                    </div>
+                    {% else %}
+                    <div class="d-flex">
+                        {{ form.profile_photo(class="form-control", id="profile_photo") }}
+                        <button type="button" class="btn btn-danger ms-2" data-bs-toggle="modal"
+                            data-bs-target="#delete-profile-modal">Delete</button>
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+            <div class="mt-2">
+                {{form.save(class="btn btn-dark btn-update")}}
+            </div>
+        </div>
+    </form>
+</div>
+<!-- Modal Cover Photo -->
+<div class="modal fade" id="delete-cover-modal" tabindex="-1" aria-labelledby="delete-cover-modal" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content modal-custom">
+            <div class="modal-header modal-header-custom">
+                <h5 class="modal-title text-danger" id="delete-cover-modal">Delete Cover Photo</h5>
+                <button type="button" class="btn clr-white" data-bs-dismiss="modal" aria-label="Close"><i
+                        class="bi bi-x-lg"></i></button>
+            </div>
+            <div class="modal-body modal-body-custom">
+                Are you sure, You want to delete the current cover photo? It will set it to default cover photo.
+                <br>
+                <small class="text-muted">You will not be able to access the current photo after deleting this
+                    photo.</small>
+            </div>
+            <div class="modal-footer modal-footer-custom">
+                <button type="button" class="btn btn-sm btn-dark" data-bs-dismiss="modal">Close</button>
+                <a href="{{ url_for('profiles.remove_cover_photo') }}" type="button"
+                    class="btn btn-sm btn-danger">Delete</a>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- Modal Profile Photo -->
+<div class="modal fade" id="delete-profile-modal" tabindex="-1" aria-labelledby="delete-profile-modal"
+    aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content modal-custom">
+            <div class="modal-header modal-header-custom">
+                <h5 class="modal-title text-danger" id="delete-profile-modal">Delete Profile Photo</h5>
+                <button type="button" class="btn clr-white" data-bs-dismiss="modal" aria-label="Close"><i
+                        class="bi bi-x-lg"></i></button>
+            </div>
+            <div class="modal-body modal-body-custom">
+                Are you sure, You want to delete the current profile photo? It will set it to default profile photo.
+                <br>
+                <small class="text-muted">You will not be able to access the current photo after deleting this
+                    photo.</small>
+            </div>
+            <div class="modal-footer modal-footer-custom">
+                <button type="button" class="btn btn-sm btn-dark" data-bs-dismiss="modal">Close</button>
+                <a href="{{ url_for('profiles.remove_profile_photo') }}" type="button"
+                    class="btn btn-sm btn-danger">Delete</a>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

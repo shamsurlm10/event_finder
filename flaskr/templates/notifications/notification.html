@@ -1,0 +1,39 @@
+{% extends "layout.html" %}
+
+{% block add_styles %}
+<link rel="stylesheet" type="text/css"
+    href="{{ url_for('static', filename='styles/notifications/notifications.css') }}">
+{% endblock %}
+
+{% block content %}
+<div class="container mt-1">
+    {% if notifications == [] %}
+    <div class="col-md-8 offset-md-2 text-center fw-bold">
+        <p class="empty-status">No notifications available</p>
+    </div>
+    {% else %}
+    <div class="col-md-8 offset-md-2 mb-2">
+        <a href="{{ url_for('notifications.mark_all') }}" class="badge bg-dark px-3 link-light fw-normal text-decoration-none">Mark all as read</a>
+    </div>
+    <div class="row">
+        {% for notification in notifications %}
+        <div class="col-md-8 offset-md-2 mb-2">
+            <div class="card card-body shadow-card {{ 'unreaded' if not notification.is_readed else '' }}">
+                <div class="d-flex flex-row">
+                    <div class="d-flex flex-column flex-grow-1">
+                        <a class="my-0 link-dark fw-normal text-decoration-none" href="{{ url_for('notifications.mark_read_and_go', id=notification.id) }}">
+                            {{ notification.message }}
+                        </a>
+                        <p class="my-0 text-muted" style="font-size: 0.7rem;">{{ notification.times_ago() }}</p>
+                    </div>
+                    <a href="{{ url_for('notifications.mark_read', id=notification.id) }}"
+                        class="badge badge-pill text-dark text-decoration-none align-self-center {{ 'd-none' if notification.is_readed else '' }}"
+                        style="font-size: 20px;"><i class="fas fa-check-circle"></i></a>
+                </div>
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+    {% endif %}
+</div>
+{% endblock %}

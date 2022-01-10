@@ -1,0 +1,15 @@
+.form-brand {
+    margin-top: 115px;
+}
+
+.input-box {
+    background-color: #ebebeb;
+}
+
+.input-box:focus {
+    box-shadow: none;
+}
+
+.btn:focus {
+    box-shadow: none;
+}

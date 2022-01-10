@@ -1,0 +1,95 @@
+<div class="mt-2 px-1">
+    <div class="d-flex justify-content-between">
+        <div class="d-flex align-items-center">
+            <img src="{{ url_for('static', filename=post.profile.profile_photo) }}"
+                class="host-img-post">
+            <div class="ms-2">
+                <div class="fw-bold my-0">{{ post.profile.get_fullname() }}</div>
+                <div class="text-muted my-0" style="font-size: 0.7rem;">
+                    {{ post.times_ago() }}
+                </div>
+            </div>
+        </div>
+        {% if current_user.profile and post.profile.id == current_user.profile.id %}
+        <div class="align-self-center">
+            <div class="btn-group dropstart">
+                <button type="button" style="border: 0; background: none;" data-bs-toggle="dropdown"
+                    aria-expanded="false">
+                    <i class="fas fa-ellipsis-h"></i>
+                </button>
+                <ul class="dropdown-menu">
+                    <li>
+                        <a class="dropdown-item dropdown-edit" href="#">
+                            <i class="fas fa-pen-nib"></i> Edit post
+                        </a>
+                    </li>
+                    <li>
+                        <button class="dropdown-item dropdown-delete" onclick="delete_post({{ post.id }})" data-postId="{{ post.id }}">
+                            <i class="fas fa-trash-alt"></i> Delete post
+                        </button>
+                    </li>
+                </ul>
+            </div>
+        </div>
+        {% endif %}
+    </div>
+</div>
+<p>{{ post.content }}</p>
+<div class="mb-2 d-flex justify-content-between" style="font-size: 0.9rem;">
+    <div class="d-flex mt-2">
+        <div>
+            <i class="fas fa-arrow-up"></i>
+            <span class="fw-bold" id="up-vote-counter-{{ post.id }}">{{ len(post.up_vote) }}</span>
+        </div>
+        <div class="ms-2">
+            <i class="fas fa-arrow-down"></i>
+            <span class="fw-bold" id="down-vote-counter-{{ post.id }}">{{ len(post.down_vote) }}</span>
+        </div>
+    </div>
+    <div class="fw-bold text-decoration-underline" id="comment-len-{{ post.id }}">
+        {{ len(post.comments) }} comments
+    </div>
+</div>
+<hr class="my-0" />
+<div class="d-flex">
+    <div class="d-flex">
+        <button class="flex-fill btn btn-sm btn-light btn-vote-comment m-2 py-2 px-5 
+            {{ 'btn-clicked' if current_user.profile.id in post.up_vote }}" id="up-vote-btn-{{ post.id }}"
+            onclick="up_vote({{ post.id }}, {{ current_user.profile.id }})">
+            <i class="fas fa-arrow-up"></i>
+            Up Vote
+        </button>
+        <button class="flex-fill btn btn-sm btn-light btn-vote-comment m-2 py-2 px-5 
+            {{ 'btn-clicked' if current_user.profile.id in post.down_vote }}" id="down-vote-btn-{{ post.id }}"
+            onclick="down_vote({{ post.id }}, {{ current_user.profile.id }})">
+            <i class="fas fa-arrow-down"></i>
+            Down Vote
+        </button>
+    </div>
+    <button class="flex-fill btn btn-sm btn-light btn-vote-comment m-2 py-2 px-5" onclick="active_comment({{ post.id }})">
+        <i class="far fa-comment-alt"></i>
+        Comment
+    </button>
+</div>
+<hr class="my-0 mb-2" />
+{% if current_user.profile and (current_user.profile.id in event.members or event.host.id == current_user.profile.id) %}
+<div class="d-flex align-items-center mb-2">
+    <img src="{{ url_for('static', filename=current_user.profile.profile_photo) }}"
+        class="comment-img-post">
+    <div class="d-flex w-100 px-2">
+        <input type="text" name="comment" id="comment-box-{{ post.id }}" class="form-control input-box me-2"
+            style="border-radius: 35px;" placeholder="Write a comment..." data-postId="{{ post.id }}" data-profileId="{{ current_user.profile.id }}" />
+        <button class="btn btn-sm btn-light px-3" id="comment-box-submit"
+            onclick="create_comment({{ current_user.profile.id }}, {{ post.id }})" type="submit"><i class="fas fa-paper-plane"></i></button>
+    </div>
+</div>
+{% endif %}
+<!-- Comment Box -->
+<div id="comment-holder-{{ post.id }}">
+{% for comment in post.comments %}
+<div id="card-comment-{{ post.id }}">
+    <div class="vr"></div>
+    {% include "events/view-event/post-sub-file/comment-card.html" %}
+</div>
+{% endfor %}
+</div>

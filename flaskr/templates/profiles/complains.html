@@ -1,0 +1,67 @@
+{% extends "layout.html" %}
+
+{% block title %} Complains {% endblock %}
+
+{% block add_styles %}
+<link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='styles/profiles/complains.css') }}">
+{% endblock %}
+
+{% block content %}
+<div class="container mt-1">
+    <div class="row mb-3">
+        <div class="d-flex justify-content-center">
+            <a href="{{ url_for('profiles.view_complains') }}"
+                class="btn btn-sm query-btn mx-1 {{ 'query-btn-active' if active == None }}">
+                Peoples Complains
+            </a>
+            <a href="{{ url_for('profiles.view_complains', complains_by='self') }}"
+                class="btn btn-sm query-btn mx-1 {{ 'query-btn-active' if active == 'self' }}">
+                My complains
+            </a>
+        </div>
+    </div>
+    <div class="row">
+        {% if complains == None or len(complains) == 0 %}
+        <div class="col-md-8 offset-md-2 text-center fw-bold">
+            <p class="empty-status">No complains available</p>
+        </div>
+        {% else %}
+        {% for complain in complains %}
+        <div class="col-md-8 offset-md-2 col-sm-12">
+            <div class="card card-body shadow-card px-4 mb-3">
+                <div class="d-flex">
+                    <img src="{{ url_for('static', filename=complain.complained_by.profile_photo) }}"
+                        class="card-img align-self-center" alt="Profile Photo">
+                    <a href="{{ url_for('profiles.view_profile', id=complain.complained_by.id) }}"
+                        class="d-flex flex-column align-self-center card-link-custom ms-3">
+                        <h2 class="card-title-custom my-0">{{ complain.complained_by.get_fullname() }}</h2>
+                        <div class="card-body-custom my-0 text-muted text-capitalize">
+                            {{ complain.complained_by.user.role.value }}
+                        </div>
+                        <div class="card-body-custom my-0 text-muted">{{ complain.get_days_ago() }}</div>
+                    </a>
+                </div>
+                <p class="mt-1">{{ complain.text }}</p>
+                <div class="fw-bold text-danger my-2" style="font-size: 0.8rem;">
+                    The reported profile
+                </div>
+                <div class="d-flex">
+                    <img src="{{ url_for('static', filename=complain.get_complain_for().profile_photo) }}"
+                        class="card-img align-self-center" alt="Profile Photo">
+                    <a href="{{ url_for('profiles.view_profile', id=complain.get_complain_for().id) }}"
+                        class="d-flex flex-column align-self-center card-link-custom ms-3">
+                        <h2 class="card-title-custom my-0">
+                            {{ complain.get_complain_for().get_fullname() }}
+                        </h2>
+                        <p class="card-body-custom my-0 text-muted text-capitalize">
+                            {{ complain.get_complain_for().user.role.value }}
+                        </p>
+                    </a>
+                </div>
+            </div>
+        </div>
+        {% endfor %}
+        {% endif %}
+    </div>
+</div>
+{% endblock %}

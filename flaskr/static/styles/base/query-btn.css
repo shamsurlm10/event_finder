@@ -1,0 +1,14 @@
+.query-btn {
+    font-size: 1.1rem;
+    padding: 5px 10px;
+    width: 220px;
+}
+
+.query-btn:hover {
+    background-color: #101010;
+    color: #EBEBEB;
+}
+
+.query-btn-active {
+    border-bottom: 5px solid #101010;
+}

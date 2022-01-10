@@ -1,0 +1,29 @@
+{% extends "admins/admin-layout.html" %}
+
+{% block title %} Hosts {% endblock %}
+
+{% block admin_contents %}
+{% if total_hosts == 0 %}
+<p class="empty-status">There is no host right now</p>
+{% else %}
+{% for host in hosts %}
+<div class="card card-body shadow-card mb-2">
+    <div class="d-flex flex-row">
+        <div class="d-flex flex-row align-self-center flex-grow-1">
+            <img src="{{ url_for('static', filename=host.profile.profile_photo) }}" alt=""
+                class="card-img align-self-center">
+            <a href="{{ url_for('profiles.view_profile', id=host.profile.id) }}"
+                class="d-flex flex-column align-self-center card-link-custom ms-3">
+                <h2 class="card-title-custom my-0">{{ host.profile.get_fullname() }}</h2>
+                <p class="card-body-custom my-0 text-muted">{{ host.email }}</p>
+                <p class="card-body-custom my-0"><i class="fas fa-external-link-alt"></i></p>
+            </a>
+        </div>
+        <div class="me-2 align-self-center">
+            <a href="{{ url_for('admins.demote_host', id=host.id) }}" class="btn btn-sm btn-danger">Demote</a>
+        </div>
+    </div>
+</div>
+{% endfor %}
+{% endif %}
+{% endblock %}

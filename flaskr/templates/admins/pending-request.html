@@ -1,0 +1,33 @@
+{% extends "admins/admin-layout.html" %}
+
+{% block title %} Pending request {% endblock %}
+
+{% block admin_contents %}
+{% if total_requests == 0 %}
+<p class="empty-status">There is no pending request available now</p>
+{% else %}
+<!-- Profile Cards Loop -->
+{% for request in requests %}
+<div class="card card-body shadow-card mb-2">
+    <div class="d-flex flex-row">
+        <div class="d-flex flex-row align-self-center flex-grow-1">
+            <img src="{{ url_for('static', filename=request.profile.profile_photo) }}" alt=""
+                class="card-img align-self-center">
+            <a href="{{ url_for('profiles.view_profile', id=request.profile.id) }}"
+                class="d-flex flex-column align-self-center card-link-custom ms-3">
+                <h2 class="card-title-custom my-0">{{ request.profile.get_fullname() }}</h2>
+                <p class="card-body-custom my-0 text-muted">{{ request.profile.user.email }}</p>
+                <p class="card-body-custom my-0"><i class="fas fa-external-link-alt"></i></p>
+            </a>
+        </div>
+        <div class="me-2 align-self-center">
+            <a href="{{ url_for('admins.approve_pending_request', id=request.id) }}"
+                class="btn btn-sm btn-primary">Approve</a>
+            <a href="{{ url_for('admins.decline_pending_request', id=request.id) }}"
+                class="btn btn-sm btn-danger">Decline</a>
+        </div>
+    </div>
+</div>
+{% endfor %}
+{% endif %}
+{% endblock %}

@@ -1,0 +1,103 @@
+{% extends "admins/admin-layout.html" %}
+
+{% block title %} Complain box {% endblock %}
+
+{% block admin_contents %}
+<div class="row">
+    {% if len(complains) == 0 %}
+    <p class="empty-status">There is no complains right now</p>
+    {% else %}
+    {% for complain in complains %}
+    <div class="card card-body shadow-card px-4 mb-3">
+        <div class="d-flex">
+            <img src="{{ url_for('static', filename=complain.complained_by.profile_photo) }}"
+                class="card-img align-self-center" alt="Profile Photo">
+            <a href="{{ url_for('profiles.view_profile', id=complain.complained_by.id) }}"
+                class="d-flex flex-column align-self-center card-link-custom ms-3">
+                <h2 class="card-title-custom my-0">{{ complain.complained_by.get_fullname() }}</h2>
+                <div class="card-body-custom my-0 text-muted text-capitalize">{{ complain.complained_by.user.role.value
+                    }}</div>
+                <div class="card-body-custom my-0 text-muted">{{ complain.get_days_ago() }}</div>
+            </a>
+        </div>
+        <p class="mt-1">{{ complain.text }}</p>
+        <div class="fw-bold text-danger my-2" style="font-size: 0.8rem;">
+            The reported profile
+        </div>
+        <div class="d-flex">
+            <img src="{{ url_for('static', filename=complain.get_complain_for().profile_photo) }}"
+                class="card-img align-self-center" alt="Profile Photo">
+            <a href="{{ url_for('profiles.view_profile', id=complain.get_complain_for().id) }}"
+                class="d-flex flex-column align-self-center card-link-custom ms-3">
+                <h2 class="card-title-custom my-0">{{ complain.get_complain_for().get_fullname() }}</h2>
+                <p class="card-body-custom my-0 text-muted text-capitalize">{{
+                    complain.get_complain_for().user.role.value }}</p>
+            </a>
+        </div>
+        <div class="d-flex mt-4 mb-3 justify-content-center">
+            <button href="{{ url_for('admins.ban_user_and_close_complain', id=complain.id) }}"
+                class="btn btn-dark btn-action-ban" data-bs-toggle="modal" data-bs-target="#banuser-modal"><i
+                    class="fas fa-ban"></i> Ban User</button>
+            <a href="{{ url_for('admins.warn_user', id=complain.id) }}" class="btn btn-dark mx-3 btn-action-warn"><i
+                    class="fas fa-exclamation-triangle"></i> Warn
+                User</a>
+            <a href="{{ url_for('admins.not_acceptable_report', id=complain.id) }}"
+                class="btn btn-dark btn-action-not-accept"><i class="fas fa-check-double"></i> Not
+                Acceptable</a>
+        </div>
+        <!-- Ban User Modal -->
+        <div class="modal fade" id="banuser-modal" tabindex="-1" aria-labelledby="banuser-modal" aria-hidden="true">
+            <div class="modal-dialog modal-dialog-centered">
+                <div class="modal-content">
+                    <div class="modal-header modal-header-custom">
+                        <h5 class="modal-title" id="banuser-modal">Ban {{
+                            complain.get_complain_for().user.profile.get_fullname() }}</h5>
+                        <button type="button" class="btn" data-bs-dismiss="modal" aria-label="Close"><i
+                                class="bi bi-x-lg"></i></button>
+                    </div>
+                    <form action="{{ url_for('admins.ban_user_and_close_complain', id=complain.id) }}" method="POST">
+                        {{ ban_form.hidden_tag() }}
+                        <div class="modal-body">
+                            Are you sure? You want to ban this user?
+                            <br>
+                            <small class="text-muted">You can unban this user anytime.</small>
+                            <div class="form-group mb-2">
+                                {{ ban_form.reason.label(class="form-label mb-0") }}
+                                {% if ban_form.reason.errors %}
+                                {{ ban_form.reason(class="form-control input-box is-invalid", id="reason") }}
+                                <div class="invalid-feeedback">
+                                    {% for error in ban_form.reason.errors %}
+                                    <span>{{ error }}</span>
+                                    {% endfor %}
+                                </div>
+                                {% else %}
+                                {{ ban_form.reason(class="form-control input-box", id="reason") }}
+                                {% endif %}
+                            </div>
+                            <div class="form-group mb-2">
+                                {{ ban_form.days.label(class="form-label mb-0") }}
+                                {% if ban_form.days.errors %}
+                                {{ ban_form.days(class="form-control input-box is-invalid", id="days") }}
+                                <div class="invalid-feeedback">
+                                    {% for error in ban_form.days.errors %}
+                                    <span>{{ error }}</span>
+                                    {% endfor %}
+                                </div>
+                                {% else %}
+                                {{ ban_form.days(class="form-control input-box", id="days") }}
+                                {% endif %}
+                            </div>
+                        </div>
+                        <div class="modal-footer modal-footer-custom">
+                            <button type="button" class="btn btn-sm btn-dark" data-bs-dismiss="modal">Close</button>
+                            {{ ban_form.submit(class="btn btn-sm btn-danger", id="submit-ban") }}
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+    {% endfor %}
+    {% endif %}
+</div>
+{% endblock %}

@@ -1,0 +1,12 @@
+.create-event-title {
+    font-size: 1.3rem;
+    font-weight: bold;
+}
+
+.event-desc-edit {
+    height: 200px;
+}
+
+.event-plans-edit {
+    height: 150px;
+}

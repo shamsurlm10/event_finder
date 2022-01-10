@@ -1,0 +1,39 @@
+{% extends "layout.html" %}
+
+{% block add_styles %}
+<link rel="stylesheet" href="{{ url_for('static', filename='styles/events/event-settings.css') }}">
+{% endblock %}
+
+{% block content %}
+<div class="container mt-1">
+    <div class="row">
+        <div class="col-md-4">
+            <div class="container">
+                <div class="col-10 offset-1">
+                    <!-- Sidebar -->
+                    <ul class="list-group text-center list-group-custom">
+                        <a href="{{ url_for('events.view_event', id=event.id) }}"
+                            class="list-group-item btn btn-settings my-1">
+                            <i class="fas fa-arrow-left"></i> Back to the event page
+                        </a>
+                        <a href="{{ url_for('events.event_info', id=event.id) }}"
+                            class="list-group-item btn btn-settings my-1 {{ 'btn-settings-active' if active == 'event-info' }}">
+                            Event Info
+                        </a>
+                        <a href="{{ url_for('events.event_plans', id=event.id) }}"
+                            class="list-group-item btn btn-settings my-1 {{ 'btn-settings-active' if active == 'event-plans' }}">
+                            Event Plans
+                        </a>
+                        <a href="{{ url_for('events.make_registration_close', id=event.id) }}" type="button" class="list-group-item btn btn-settings-danger my-1">
+                            Close the registration
+                        </a>
+                    </ul>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-8">
+            {% block event_settings %} {% endblock %}
+        </div>
+    </div>
+</div>
+{% endblock %}

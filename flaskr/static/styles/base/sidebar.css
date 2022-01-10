@@ -1,0 +1,51 @@
+.list-group-custom {
+    border-radius: 15px;
+}
+
+.btn-settings {
+    background-color: #F6F6F6;
+    color: #101010;
+    font-weight: 500;
+    border: 0;
+    border-radius: 15px;
+}
+
+.btn-settings:hover, .btn-settings-active {
+    background-color: #101010;
+    color: #F6F6F6;
+}
+
+.btn-settings-danger {
+    background-color: #FFBABA;
+    color: #9F0000;
+    font-weight: 500;
+    border: 0;
+    border-radius: 15px;
+    transition: 0.5s;
+}
+
+.btn-settings-danger:hover {
+    color: #9F0000;
+}
+
+.settings-head {
+    border: 0;
+    background-color: #F6F6F6;
+}
+
+h1.heading {
+    font-size: 1.2rem;
+    font-weight: bold;
+    margin: 0;
+}
+
+p.heading {
+    font-size: 0.9rem;
+    margin: 0;
+}
+
+.settings-header {
+    margin-top: 20px;
+    font-size: 1.1rem;
+    font-weight: bold;
+}

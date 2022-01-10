@@ -1,0 +1,20 @@
+<div class="toast-container position-fixed top-0 start-0 p-3" style="z-index: 101;">
+    {% with messages = get_flashed_messages(with_categories=true) %}
+    {% if messages %}
+    {% for category, message in messages %}
+    <div class="toast show" role="alert" aria-live="assertive" aria-atomic="true">
+        <div class="toast-header align-items-center bg-{{ category }} text-{{ 'light' if category != 'info' and category != 'warning' else 'dark' }}">
+            <p class="me-auto my-0">{{ "Event Finder" }}</p>
+            <small class="me-2">Message</small>
+            <button type="button" class="m-0 btn btn-sm btn-{{ category }}" data-bs-dismiss="toast" aria-label="Close">
+                <i class="fas fa-times"></i>
+            </button>
+        </div>
+        <div class="toast-body">
+            {{ message }}
+        </div>
+    </div>
+    {% endfor %}
+    {% endif %}
+    {% endwith %}
+</div>

@@ -1,0 +1,64 @@
+<div class="mt-2">
+    <div class="d-flex justify-content-between">
+        <div class="d-flex align-items-center">
+            <img src="{{ url_for('static', filename=comment.profile.profile_photo) }}"
+                class="comment-img-post">
+            <div class="ms-2">
+                <div class="fw-bold my-0" style="font-size: 0.9rem;">
+                    {{ comment.profile.get_fullname() }}
+                </div>
+                <div class="text-muted my-0" style="font-size: 0.7rem;">
+                    {{ comment.times_ago() }}
+                </div>
+            </div>
+        </div>
+        {% if current_user.profile and comment.profile.id == current_user.profile.id %}
+        <div class="align-self-center">
+            <div class="btn-group dropstart">
+                <button type="button" style="border: 0; background: none;" data-bs-toggle="dropdown"
+                    aria-expanded="false">
+                    <i class="fas fa-ellipsis-h"></i>
+                </button>
+                <ul class="dropdown-menu">
+                    <li>
+                        <a class="dropdown-item dropdown-edit" href="#">
+                            <i class="fas fa-pen-nib"></i> Edit comment
+                        </a>
+                    </li>
+                    <li>
+                        <button class="dropdown-item dropdown-delete" onclick="delete_comment({{ comment.id }}, {{ post.id }})">
+                            <i class="fas fa-trash-alt"></i> Delete comment
+                        </button>
+                    </li>
+                </ul>
+            </div>
+        </div>
+        {% endif %}
+    </div>
+    <p class="mb-0">{{ comment.content }}</p>
+    <div class="ms-5">
+        <!-- Reply Box -->
+        <div id="reply-holder-{{ comment.id }}">
+            {% for reply in comment.replies %}
+            <div id="card-reply-{{ comment.id }}">
+                <div class="vr"></div>
+                {% include "events/view-event/post-sub-file/reply-card.html" %}
+            </div>
+            {% endfor %}
+        </div>
+        {% if current_user.profile and (current_user.profile.id in event.members or event.host.id == current_user.profile.id) %}
+        <div class="d-flex align-items-center mb-2">
+            <img src="{{ url_for('static', filename=current_user.profile.profile_photo) }}"
+                class="reply-img-post">
+            <div class="d-flex w-100 px-2">
+                <input type="text" name="comment"
+                    id="reply-box-{{ comment.id }}" class="form-control input-box me-2"
+                    style="border-radius: 35px; font-size: 0.8rem;" placeholder="Write a reply..." />
+                <button class="btn btn-sm btn-light px-3" type="submit"
+                    onclick="create_reply({{ current_user.profile.id }}, {{ comment.id }})"><i
+                        class="fas fa-paper-plane"></i></button>
+            </div>
+        </div>
+        {% endif %}
+    </div>
+</div>

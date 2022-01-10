@@ -1,0 +1,18 @@
+{% extends "events/event-settings-layout.html" %}
+
+{% block title %} Event Plans {% endblock %}
+
+{% block event_settings %}
+<h2 class="settings-header">Event Planning</h2>
+<div class="card card-body shadow-card p-4">
+    <form method="POST">
+        {% for i in range(event.day+event.night) %}
+            <div class="form-floating my-3">
+                <textarea class="form-control input-box event-desc-edit" name="event_plans_{{ i }}" placeholder="Write your plans" id="event_plans_{{ i }}" style="height: 100px">{{ event.plans[i] }}</textarea>
+                <label for="event_plans">Plans in day {{ i }}</label>
+              </div>
+        {% endfor %}
+        <button type="submit" class="btn btn-dark">Submit</button>
+    </form>
+</div>
+{% endblock %}

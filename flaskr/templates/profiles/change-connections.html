@@ -1,0 +1,88 @@
+{% extends "profiles/account-settings-layout.html" %}
+
+{% block title %} Change social connections {% endblock %}
+
+{% block settings %}
+<h2 class="settings-header">Social Connections</h2>
+<div class="card card-body shadow-card p-4">
+    <form method="POST">
+        {{ form.hidden_tag() }}
+        <div class="input-group flex-nowrap mt-2">
+            <span class="input-group-text" id="addon-wrapping"><i class="fab fa-facebook"
+                    style="color: #0778E9;"></i></i></span>
+            {% if form.facebook.errors %}
+            {{ form.facebook(class="form-control input-box is-invalid", id="facebook") }}
+            <div class="invalid-feeedback">
+                {% for error in form.facebook.errors %}
+                <span>{{ error }}</span>
+                {% endfor %}
+            </div>
+            {% else %}
+            {{ form.facebook(class="form-control input-box", id="facebook") }}
+            {% endif %}
+        </div>
+        <div class="input-group flex-nowrap mt-2">
+            <span class="input-group-text" id="addon-wrapping"><i class="fab fa-twitter"
+                    style="color: #1D9BF0;"></i></i></span>
+            {% if form.twitter.errors %}
+            {{ form.twitter(class="form-control input-box is-invalid", id="twitter") }}
+            <div class="invalid-feeedback">
+                {% for error in form.twitter.errors %}
+                <span>{{ error }}</span>
+                {% endfor %}
+            </div>
+            {% else %}
+            {{ form.twitter(class="form-control input-box", id="twitter") }}
+            {% endif %}
+        </div>
+        <div class="input-group flex-nowrap mt-2">
+            <span class="input-group-text" id="addon-wrapping">
+                <i class="fab fa-github" style="color: #161B22;"></i>
+            </span>
+            {% if form.github.errors %}
+            {{ form.github(class="form-control input-box is-invalid", id="github") }}
+            <div class="invalid-feeedback">
+                {% for error in form.github.errors %}
+                <span>{{ error }}</span>
+                {% endfor %}
+            </div>
+            {% else %}
+            {{ form.github(class="form-control input-box", id="github") }}
+            {% endif %}
+        </div>
+        <div class="input-group flex-nowrap mt-2">
+            <span class="input-group-text" id="addon-wrapping">
+                <i class="fab fa-linkedin" style="color: #0A66C2;"></i>
+            </span>
+            {% if form.linkedin.errors %}
+            {{ form.linkedin(class="form-control input-box is-invalid", id="linkedin") }}
+            <div class="invalid-feeedback">
+                {% for error in form.linkedin.errors %}
+                <span>{{ error }}</span>
+                {% endfor %}
+            </div>
+            {% else %}
+            {{ form.linkedin(class="form-control input-box", id="linkedin") }}
+            {% endif %}
+        </div>
+        <div class="input-group flex-nowrap mt-2">
+            <span class="input-group-text" id="addon-wrapping">
+                <i class="fas fa-globe-asia"></i>
+            </span>
+            {% if form.website.errors %}
+            {{ form.website(class="form-control input-box is-invalid", id="website") }}
+            <div class="invalid-feeedback">
+                {% for error in form.website.errors %}
+                <span>{{ error }}</span>
+                {% endfor %}
+            </div>
+            {% else %}
+            {{ form.website(class="form-control input-box", id="website") }}
+            {% endif %}
+        </div>
+        <div class="mt-2">
+            {{form.save(class="btn btn-dark btn-update")}}
+        </div>
+    </form>
+</div>
+{% endblock %}

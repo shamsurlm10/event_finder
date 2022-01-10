@@ -1,0 +1,79 @@
+{% extends "layout.html" %}
+
+{% block title %} Complains {% endblock %}
+
+{% block add_styles %}
+<link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='styles/profiles/complains.css') }}">
+{% endblock %}
+
+{% block content %}
+<div class="container mt-1">
+    <div class="row mb-3">
+        <div class="d-flex justify-content-center">
+            <a href="{{ url_for('profiles.events') }}"
+                class="btn btn-sm query-btn mx-1 {{ 'query-btn-active' if active == None }}">Created Events</a>
+            <a href="{{ url_for('profiles.events', filter='joined') }}"
+                class="btn btn-sm query-btn mx-1 {{ 'query-btn-active' if active == 'joined' }}">Joined Events</a>
+            <a href="{{ url_for('profiles.events', filter='pending') }}"
+                class="btn btn-sm query-btn mx-1 {{ 'query-btn-active' if active == 'pending' }}">Pending Events</a>
+        </div>
+    </div>
+    <div class="row row-cols-1 row-cols-md-3 g-4">
+        {% if events == None or len(events) == 0 %}
+        <div class="col-md-8 offset-md-2 text-center fw-bold">
+            <p class="empty-status">No events available</p>
+        </div>
+        {% else %}
+        {% for event in events %}
+        <div class="col">
+            <div class="card shadow-card event-card h-100">
+                <img src="{{ url_for('static', filename=event.cover_photo) }}" class="card-img-top event-card-img"
+                    alt="Cover photo of the event">
+                <div class="card-body">
+                    <h6 class="card-title fw-bold">{{ event.title }}</h6>
+                    <div class="card-text text-{{ event.event_status().category }} fw-bold mb-1">
+                        {{ event.event_status().message }}
+                    </div>
+                    <div class="card-text">
+                        <strong>
+                            <i class="fas fa-map-marker-alt"></i> Location:
+                        </strong>
+                        {{ event.place_name }}
+                    </div>
+                    <div class="card-text">
+                        <strong>
+                            <i class="fas fa-clock"></i> Date:
+                        </strong>
+                        {{ event.get_start_date() }} at {{ event.get_start_time() }}
+                    </div>
+                    <div class="card-text">
+                        <strong>
+                            <i class="fas fa-user-tie"></i> Host:
+                        </strong>
+                        <a href="{{ url_for('profiles.view_profile', id=event.host.id) }}" class="text-reset">
+                            {{ event.host.get_fullname() }}
+                        </a>
+                    </div>
+                    <div class="card-text">
+                        <strong>
+                            <i class="fas fa-money-check-alt"></i> Register Fee:
+                        </strong>
+                        {{ event.fee }} Taka
+                    </div>
+                    <div class="card-text">
+                        <strong>
+                            <i class="fas fa-users"></i> Members:
+                        </strong>
+                        {{ len(event.members) if event.members else 0 }} out of {{ event.max_member }}
+                    </div>
+                    <a href="{{ url_for('events.view_event', id=event.id) }}" class="btn btn-dark w-100 btn-sm mt-3">
+                        Explore the event
+                    </a>
+                </div>
+            </div>
+        </div>
+        {% endfor %}
+        {% endif %}
+    </div>
+</div>
+{% endblock %}

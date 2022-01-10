@@ -1,0 +1,40 @@
+<div class="d-flex justify-content-between">
+    <div class="d-flex align-items-center">
+        <img src="{{ url_for('static', filename=reply.profile.profile_photo) }}"
+            class="reply-img-post">
+        <div class="ms-2">
+            <div class="fw-bold my-0" style="font-size: 0.8rem;">
+                {{ reply.profile.get_fullname() }}
+            </div>
+            <div class="text-muted my-0" style="font-size: 0.6rem;">
+                {{ reply.times_ago() }}
+            </div>
+        </div>
+    </div>
+    {% if current_user.profile and reply.profile.id == current_user.profile.id %}
+    <div class="align-self-center">
+        <div class="btn-group dropstart">
+            <button type="button" style="border: 0; background: none;" data-bs-toggle="dropdown"
+                aria-expanded="false">
+                <i class="fas fa-ellipsis-h"></i>
+            </button>
+            {% if current_user.profile and reply.profile.id == current_user.profile.id %}
+            <ul class="dropdown-menu">
+                <li>
+                    <a class="dropdown-item dropdown-edit" href="#">
+                        <i class="fas fa-pen-nib"></i> Edit reply
+                    </a>
+                </li>
+                <li>
+                    <button class="dropdown-item dropdown-delete" id="delte-reply-btn"
+                        onclick="delete_reply({{ reply.id }})">
+                        <i class="fas fa-trash-alt"></i> Delete reply
+                    </button>
+                </li>
+            </ul>
+            {% endif %}
+        </div>
+    </div>
+    {% endif %}
+</div>
+<p class="mb-0" style="font-size: 0.9rem;">{{ reply.content }}</p>

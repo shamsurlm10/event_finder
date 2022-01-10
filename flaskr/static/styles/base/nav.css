@@ -1,0 +1,123 @@
+.navigation-bar {
+    background-color: #101010;
+    position: sticky;
+    top: 0;
+    z-index: 100;
+}
+.nav-brand-logo {
+    height: 30px;
+}
+.navbar-toggler {
+    background-color: #e7eef1 !important;
+}
+
+.search-btn-sm,
+.search-btn {
+    background-color: #ebebeb;
+    border-radius: 0px;
+    font-weight: 600;
+}
+
+.search-bar-sm,
+.search-bar {
+    background-color: rgba(49, 49, 49, 40);
+    border: 0;
+    border-radius: 0px;
+    color: #e7eef1;
+}
+
+.search-bar:focus,
+.search-bar-sm:focus {
+    background-color: rgba(49, 49, 49, 40) !important;
+    color: #e7eef1;
+    box-shadow: none;
+}
+
+.btn-infos,
+.btn-auth {
+    background-color: transparent;
+    color: #e7eef1;
+    padding: 0 auto;
+    border: #e7eef1;
+}
+
+.btn-active {
+    background-color: #e7eef1;
+    color: #101010;
+}
+
+.btn-infos:hover,
+.btn-auth:hover {
+    background-color: #e7eef1;
+}
+
+.search-bar,
+.search-btn {
+    display: none;
+}
+
+.big-screen {
+    display: none !important;
+}
+
+.sm-screen {
+    margin-top: 5px;
+}
+
+.search-bar-sm,
+.search-btn-sm {
+    margin-top: 5px;
+    display: block;
+}
+
+.search-btn-sm:hover {
+    background-color: #b8b8b8;
+}
+
+.navbar-toggler {
+    background-color: transparent !important;
+}
+
+.nav-menu-three-bar {
+    color: #e7eef1;
+}
+
+@media only screen and (min-width: 451px) {
+    .xsm-screen {
+        display: none !important;
+    }
+    .search-bar,
+    .search-btn {
+        display: block;
+    }
+    .search-btn:hover {
+        background-color: #b8b8b8;
+    }
+    .search-bar {
+        min-width: 250px;
+    }
+}
+
+@media only screen and (min-width: 768px) {
+    .search-bar {
+        min-width: 400px;
+    }
+}
+
+@media only screen and (min-width: 992px) {
+    .sm-screen {
+        display: none !important;
+    }
+    .big-screen {
+        display: block !important;
+    }
+    .search-btn {
+        min-width: 120px;
+    }
+    .search-bar {
+        min-width: 500px;
+    }
+    .badge {
+        margin: 5px -5px;
+    }
+}

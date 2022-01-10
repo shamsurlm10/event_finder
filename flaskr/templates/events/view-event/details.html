@@ -1,0 +1,238 @@
+{% extends "events/view-event/view-event-layout.html" %}
+{% block title %} Event Details {% endblock %}
+
+{% block event_data %}
+<div class="row row-cols-1 row-cols-md-2 g-4">
+    <div class="col">
+        <!-- About the event -->
+        <div class="card card-body shadow-card h-100">
+            <div class="event-status-top-bar d-flex">
+                <div class="fw-bold">About the event</div>
+                {% if current_user.profile and event.host.id == current_user.profile.id %}
+                <a href="{{ url_for('events.event_info', id=event.id) }}"
+                    class="align-self-center ms-auto icon-dark link-icon-dark">
+                    <i class="fas fa-cog my-auto sm-icon"></i>
+                </a>
+                {% endif %}
+            </div>
+            <div class="px-1 mt-3">
+                <div class="d-flex align-items-center">
+                    <i class="fas fa-money-check-alt"></i>
+                    <div class="fw-bold mx-2">Register fee:</div>
+                    <div>{{ event.fee }} Taka</div>
+                </div>
+                <div class="d-flex align-items-center">
+                    <i class="fas fa-calendar-times"></i>
+                    <div class="fw-bold mx-2">Event Date:</div>
+                    <div>{{ event.get_start_date() }}</div>
+                </div>
+                <div class="d-flex align-items-center">
+                    <i class="fas fa-clock"></i>
+                    <div class="fw-bold mx-2">Event Time:</div>
+                    <div>{{ event.get_start_time() }}</div>
+                </div>
+                <div class="d-flex align-items-center">
+                    <i class="fas fa-users"></i>
+                    <div class="fw-bold mx-2">Members Count:</div>
+                    <div>{{ len(event.members) if event.members else 0 }} out of {{ event.max_member }} going</div>
+                </div>
+                <div class="d-flex align-items-center">
+                    <i class="far fa-comment"></i>
+                    <div class="fw-bold mx-2">Total Posts:</div>
+                    <div>{{ '0' if not event.posts else len(event.posts) }}</div>
+                </div>
+                <div class="d-flex align-items-center">
+                    <i class="fas fa-hotel"></i>
+                    <div class="fw-bold mx-2">Hotel Name:</div>
+                    {% if event.event_weblink != '' and event.hotel_name != '' %}
+                    <a class="text-dark" target="_blank" href="{{ event.hotel_weblink }}">{{ event.hotel_name }}</a>
+                    {% elif event.hotel_name != '' %}
+                    <div>{{ event.hotel_name }}</div>
+                    {% else %}
+                    <div>No hotel added</div>
+                    {% endif %}
+                </div>
+                <hr class="my-1" style="border: 1px solid black;">
+                <div class="text-{{ event.event_status().category }} my-0 fw-bold">
+                    {{ event.event_status().message }}
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="col">
+        <div class="card card-body shadow-card  h-100">
+            <div class="event-status-top-bar d-flex">
+                <div class="fw-bold">Host Details</div>
+            </div>
+            <div class="d-flex align-items-center m-auto">
+                <img src="{{ url_for('static', filename=event.host.profile_photo) }}" class="host-details-img">
+                <div class="px-1 mt-3 mx-3">
+                    <div class="d-flex align-items-center">
+                        <i class="fas fa-address-book"></i>
+                        <div class="mx-2">
+                            <a href="{{ url_for('profiles.view_profile', id=event.host.id) }}"
+                                class="text-dark fw-bold">{{ event.host.get_fullname() }}</a>
+                        </div>
+                    </div>
+                    <div class="d-flex align-items-center">
+                        <i class="fas fa-at"></i>
+                        <div class="mx-2">{{ event.host.user.email }}</div>
+                    </div>
+                    <div class="d-flex align-items-center">
+                        <i class="fas fa-tty"></i>
+                        <div class="fw-bold mx-2">Contact:</div>
+                        <div>{{ event.phone_number }}</div>
+                    </div>
+                    <div class="d-flex align-items-center">
+                        <i class="fas fa-star"></i>
+                        <div class="mx-2">
+                            {{ event.host.user.profile.rating if event.host.user.profile.rating else
+                            'Unrated'}}
+                        </div>
+                    </div>
+                    <div class="d-flex align-items-center">
+                        <i class="fas fa-calendar-times"></i>
+                        <div class="mx-2">{{ len(event.host.hosted_events) }} event hosted</div>
+                    </div>
+                    <div class="d-flex align-items-center">
+                        <i class="fas fa-id-card"></i>
+                        <div class="mx-2">{{ event.host.nid_number }}</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- Photos of event -->
+<div class="row row-cols-1 row-cols-md-2 g-4 mt-3">
+    <div class="col">
+        <div class="event-status-top-bar d-flex">
+            <div class="fw-bold">
+                Photos
+            </div>
+            {% if current_user.profile and event.host.id == current_user.profile.id %}
+            <button class="align-self-center ms-auto icon-dark link-icon-dark border-0" data-bs-toggle="modal"
+                data-bs-target="#add-photo-modal">
+                <i class="fas fa-plus sm-icon"></i>
+            </button>
+            {% endif %}
+        </div>
+        <div id="carouselExampleDark" class="carousel carousel-dark slide" data-bs-ride="carousel">
+            <div class="carousel-inner mt-3">
+                {% for i in range(len(event.photos)) %}
+                <div class="carousel-item {{ 'active' if i==0 else '' }}">
+                    <img src="{{ url_for('static', filename=event.photos[i]) }}" class="d-block w-100"
+                        alt="Event photo">
+                </div>
+                {% endfor %}
+            </div>
+            <button class="carousel-control-prev" type="button" data-bs-target="#carouselExampleDark"
+                data-bs-slide="prev">
+                <span class="next-prev-slider-btn"><i class="fas fa-chevron-left" aria-hidden="true"></i></span>
+                <span class="visually-hidden">Previous</span>
+            </button>
+            <button class="carousel-control-next" type="button" data-bs-target="#carouselExampleDark"
+                data-bs-slide="next">
+                <span class="next-prev-slider-btn"><i class="fas fa-chevron-right" aria-hidden="true"></i></span>
+                <span class="visually-hidden">Next</span>
+            </button>
+        </div>
+    </div>
+    <!-- Descriptions -->
+    <div class="col">
+        <div class="card card-body shadow-card h-100">
+            <div class="event-status-top-bar d-flex">
+                <div class="fw-bold">Event Description</div>
+                {% if current_user.profile and event.host.id == current_user.profile.id %}
+                <a href="{{ url_for('events.event_info', id=event.id) }}"
+                    class="align-self-center ms-auto icon-dark link-icon-dark">
+                    <i class="fas fa-cog my-auto sm-icon"></i>
+                </a>
+                {% endif %}
+            </div>
+            <div class="mt-1 mx-2" style="text-align: justify;">{{ event.description }}</div>
+        </div>
+    </div>
+</div>
+<div class="row mt-4">
+    <div class="col-md-8 offset-md-2">
+        <div class="event-status-top-bar d-flex">
+            <div class="fw-bold">
+                Event Plannings
+            </div>
+            {% if current_user.profile and event.host.id == current_user.profile.id %}
+            <a href="{{ url_for('events.event_plans', id=event.id) }}"
+                class="align-self-center ms-auto icon-dark link-icon-dark border-0">
+                <i class="fas fa-cog my-auto sm-icon"></i>
+            </a>
+            {% endif %}
+        </div>
+        {% if len(event.plans) > 0 %}
+        <div class="card card-body shadow-card my-2">
+            {% for i in range(len(event.plans)) %}
+            {% if event.plans[i] != "" %}
+            <div class="my-2">
+                <div class="fw-bold day-title">
+                    Day {{ i }}
+                </div>
+                <p>
+                    {{ event.plans[i] }}
+                </p>
+            </div>
+            <hr class="my-0" />
+            {% endif %}
+            {% endfor %}
+        </div>
+        {% else %}
+        <p class="my-2 fw-bold text-center">
+            The host did not add any plans yet.
+        </p>
+        {% endif %}
+    </div>
+</div>
+
+<!-- Modal for uploading images -->
+<div class="modal fade" id="add-photo-modal" tabindex="-1" aria-labelledby="add-photo-modal" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-header modal-header-custom">
+                <h5 class="modal-title" id="add-photo-modal">
+                    Add photos in the event
+                </h5>
+                <button type="button" class="btn" data-bs-dismiss="modal" aria-label="Close"><i
+                        class="bi bi-x-lg"></i></button>
+            </div>
+            <div class="modal-body modal-body-custom">
+                <!-- Images -->
+                <div class="d-flex align-content-start flex-wrap">
+                    {% if len(event.get_photos()) == 0 %}
+                    <p class="my-1 mx-auto text-dark">No photos uploaded yet.</p>
+                    {% else %}
+                    <div class="text-muted w-100 mb-1">
+                        Uploaded photos
+                    </div>
+                    {% for photo in event.get_photos() %}
+                    <img src="{{ url_for('static', filename=photo) }}" class="sm-img p-2" alt="Event photos" />
+                    {% endfor %}
+                    {% endif %}
+                </div>
+                <form action="{{ url_for('events.add_photos', id=event.id) }}" class="mt-2" method="POST"
+                    enctype="multipart/form-data">
+                    <div class="text-muted w-100 mb-1">
+                        Upload new photos
+                    </div>
+                    {% for i in range(3) %}
+                    <div class="form-group mb-2">
+                        <label for="photo-{{ str(i+1) }}" class="text-dark">Photo {{i+1}}</label>
+                        <input type="file" class="form-control input-box" name="photo_{{ str(i+1) }}"
+                            id="photo-{{ str(i+1) }}" />
+                    </div>
+                    {% endfor %}
+                    <input type="submit" value="Upload Photos" class="btn btn-primary btn-sm" />
+                    <button type="button" class="btn btn-sm me-2 btn-dark" data-bs-dismiss="modal">Close</button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

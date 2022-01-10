@@ -1,0 +1,31 @@
+{% extends "admins/admin-layout.html" %}
+
+{% block title %} Banned users {% endblock %}
+
+{% block admin_contents %}
+{% if total_acc_restriction == 0 %}
+<p class="empty-status">There is no banned user</p>
+{% else %}
+<!-- Profile Cards Loop -->
+{% for acc_restriction in acc_restrictions %}
+<div class="card card-body shadow-card mb-2">
+    <div class="d-flex flex-row">
+        <div class="d-flex flex-row align-self-center flex-grow-1">
+            <img src="{{ url_for('static', filename=acc_restriction.profile.profile_photo) }}" alt=""
+                class="card-img align-self-center">
+            <a href="{{ url_for('profiles.view_profile', id=acc_restriction.profile.id) }}"
+                class="d-flex flex-column align-self-center card-link-custom ms-3">
+                <h2 class="card-title-custom my-0">{{ acc_restriction.profile.get_fullname() }}</h2>
+                <p class="card-body-custom my-0 text-muted">{{ acc_restriction.profile.user.email }}</p>
+                <p class="card-body-custom my-0"><i class="fas fa-external-link-alt"></i></p>
+            </a>
+        </div>
+        <div class="me-2 align-self-center">
+            <a href="{{ url_for('admins.unban_user', id=acc_restriction.profile.user.id) }}"
+                class="btn btn-sm btn-primary">Unban</a>
+        </div>
+    </div>
+</div>
+{% endfor %}
+{% endif %}
+{% endblock %}

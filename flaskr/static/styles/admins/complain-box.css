@@ -1,0 +1,16 @@
+.btn-action-ban, .btn-action-warn, .btn-action-not-accept {
+    width: 180px;
+    border: 0;
+}
+
+.btn-action-ban:hover {
+    color: #DC3545;
+    background-color: #e3e3e3;
+    font-weight: bold;
+}
+
+.btn-action-warn:hover, .btn-action-not-accept:hover {
+    color: #212529;
+    background-color: #e3e3e3;
+    font-weight: bold;
+}

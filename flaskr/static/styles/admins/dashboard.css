@@ -1,0 +1,30 @@
+.card-link {
+    border: 0;
+    background-color: #fbfbfb;
+    color: #101010;
+}
+.system-status {
+    font-weight: bold;
+    color: #101010;
+}
+.card-details {
+    font-weight: bold;
+    font-size: 2.4rem;
+    color: #101010;
+}
+.card-link:hover {
+    color: #101010;
+}
+.card-link-a {
+    text-decoration: none;
+}
+.btn-search {
+    min-width: 200px;
+}
+.btn-search:hover {
+   color: #569cdc
+}
+.user-font {
+    font-weight: bold;
+    font-size: 1.2rem;
+}

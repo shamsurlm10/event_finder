@@ -1,0 +1,54 @@
+{% for payment in event.pending_payments %}
+{% if not payment.decline and not payment.is_approved %}
+<div class="col mb-2">
+    <div class="card card-body shadow-card h-100">
+        <div class="d-flex align-items-center justify-content-between">
+            <div class="d-flex align-items-center">
+                <img class="pending-member-img" src="{{ url_for('static', filename=payment.profile.profile_photo) }}" />
+                <div class="mx-2">
+                    <a href="{{ url_for('profiles.view_profile', id=payment.profile.id) }}"
+                        class="fw-bold link-dark my-0" style="font-size: 1.1rem;">{{ payment.profile.get_fullname()
+                        }}</a>
+                    <div class="text-muted my-0" style="font-size: 0.7rem;">{{ payment.profile.user.role.value }}</div>
+                    <div class="text-muted my-0" style="font-size: 0.7rem;">{{ payment.profile.user.email }}</div>
+                    <div class="my-0" style="font-size: 0.8rem;">TRNX ID: {{ payment.trnx }}</div>
+                </div>
+            </div>
+            <div>
+                <a href="{{ url_for('events.accept_pending_members', event_id=event.id, profile_id=payment.profile.id) }}"
+                    class="btn btn-sm btn-primary me-2">Approve</a>
+                <button class="btn btn-sm btn-danger" data-bs-toggle="modal"
+                    data-bs-target="#decline-modal">Decline</button>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- Modal for decline user -->
+<div class="modal fade" id="decline-modal" tabindex="-1" aria-labelledby="decline-modal" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-header modal-header-custom">
+                <h5 class="modal-title" id="decline-modal">
+                    Decline a user
+                </h5>
+                <button type="button" class="btn" data-bs-dismiss="modal" aria-label="Close"><i
+                        class="bi bi-x-lg"></i></button>
+            </div>
+            <div class="modal-body modal-body-custom">
+                <form action="{{ url_for('events.decline_pending_members', event_id=event.id, payment_id=payment.id) }}" method="POST">
+                    <div class="text-muted w-100 mb-1">
+                        Give a reason to decline a request
+                    </div>
+                    <div class="form-floating mb-4">
+                        <input type="text" class="form-control input-box" name="reason" id="reason" placeholder="Specify the reason to decline the user" />
+                        <label for="reason" class="text-dark">Reason</label>
+                    </div>
+                    <input type="submit" value="Decline" class="btn btn-danger btn-sm" />
+                    <button type="button" class="btn btn-sm me-2 btn-dark" data-bs-dismiss="modal">Close</button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+{% endif %}
+{% endfor %}

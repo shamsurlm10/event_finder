@@ -1,0 +1,76 @@
+{% extends "layout.html" %}
+
+{% block title %} Bookmarks {% endblock %}
+
+{% block add_styles %}
+<link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='styles/profiles/bookmarks.css') }}">
+{% endblock %}
+
+{% block content %}
+<div class="container mt-1">
+    <div class="row mb-3">
+        <div class="d-flex justify-content-center">
+            <a href="{{ url_for('profiles.bookmarks') }}"
+                class="btn btn-sm query-btn mx-1 {{ 'query-btn-active' if active == None or active == 'profile'}}">Profiles</a>
+            <a href="{{ url_for('profiles.bookmarks', filter='event') }}"
+                class="btn btn-sm query-btn mx-1 {{ 'query-btn-active' if active == 'event' }}">Events</a>
+        </div>
+    </div>
+
+    {% if active == None or active == "profile" %}
+    <div class="row">
+        {% if bookmarks == None or len(bookmarks) == 0 %}
+        <div class="col-md-8 offset-md-2 text-center fw-bold">
+            <p class="empty-status">No bookmarked profile available</p>
+        </div>
+        {% else %}
+        {% for bookmark in bookmarks %}
+        <div class="col-md-8 offset-md-2 col-sm-12">
+            <div class="card card-body shadow-card mb-2">
+                <div class="d-flex flex-row">
+                    <div class="d-flex flex-row align-self-center flex-grow-1">
+                        <img src="{{ url_for('static', filename=bookmark.profile_photo) }}" alt=""
+                            class="card-img align-self-center">
+                        <a href="{{ url_for('profiles.view_profile', id=bookmark.id) }}"
+                            class="d-flex flex-column align-self-center card-link-custom ms-3">
+                            <h2 class="card-title-custom my-0">{{ bookmark.get_fullname() }}</h2>
+                            <p class="card-body-custom my-0 text-muted">{{ bookmark.user.email }}</p>
+                            <p class="card-body-custom my-0"><i class="fas fa-external-link-alt"></i></p>
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+        {% endfor %}
+        {% endif %}
+    </div>
+    {% else %}
+    <div class="row row-cols-1 row-cols-md-3 g-4">
+        {% if bookmarks == None or len(bookmarks) == 0 %}
+        <div class="col-md-8 offset-md-2 text-center fw-bold">
+            <p class="empty-status">No bookmarked event available</p>
+        </div>
+        {% else %}
+        {% for bookmark in bookmarks %}
+        <div class="col">
+            <div class="card shadow-card event-card h-100">
+                <img src="{{ url_for('static', filename=bookmark.cover_photo) }}"
+                    class="card-img-top event-card-img" alt="Cover photo of the event">
+                <div class="card-body">
+                    <h5 class="card-title fw-bold">{{ bookmark.title }}</h5>
+                    {% if len(bookmark.description) > 100 %}
+                    <p class="card-text">{{ bookmark.description[:100] + "..."}}</p>
+                    {% else %}
+                    <p class="card-text">{{ bookmark.description }}</p>
+                    {% endif %}
+                    <a href="{{ url_for('events.view_event', id=bookmark.id) }}"
+                        class="btn btn-dark w-100 btn-sm">Explore the event</a>
+                </div>
+            </div>
+        </div>
+        {% endfor %}
+        {% endif %}
+    </div>        
+    {% endif %}
+</div>
+{% endblock %}

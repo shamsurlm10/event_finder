@@ -1,0 +1,8 @@
+.unreaded {
+    border-left: 10px solid rgb(31, 31, 31);
+    background-color: #ececec;
+}
+
+.unreaded > div > a {
+    font-weight: bold !important;
+}

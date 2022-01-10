@@ -1,0 +1,50 @@
+{% extends "layout.html" %}
+
+{% block add_styles %}
+<link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='styles/admins/base.css') }}">
+<link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='styles/admins/dashboard.css') }}">
+<link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='styles/admins/complain-box.css') }}">
+<link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='styles/admins/pending-request.css') }}">
+{% endblock %}
+
+{% block content %}
+<div class="container mt-1">
+    <div class="row">
+        <div class="col-md-4">
+            <div class="container">
+                <div class="col-10 offset-1">
+                    <ul class="list-group text-center list-group-custom">
+                        <a href="{{ url_for('admins.dashboard') }}"
+                            class="list-group-item btn btn-settings my-1 {{ 'btn-settings-active' if active == 'dashboard' }}">
+                            Dashboard
+                        </a>
+                        <a href="{{ url_for('admins.pending_request') }}"
+                            class="list-group-item btn btn-settings my-1 {{ 'btn-settings-active' if active == 'pending_request' }}">
+                            Pending Request
+                        </a>
+                        <a href="{{ url_for('admins.view_hosts') }}"
+                            class="list-group-item btn btn-settings my-1 {{ 'btn-settings-active' if active == 'view_hosts' }}">
+                            View Hosts
+                        </a>
+                        <a href="{{ url_for('admins.complain_box') }}"
+                            class="list-group-item btn btn-settings my-1 {{ 'btn-settings-active' if active == 'complain_box' }}">
+                            Complain Box
+                        </a>
+                        <!-- <a href="{{ url_for('admins.log') }}"
+                            class="list-group-item btn btn-settings my-1 {{ 'btn-settings-active' if active == 'log' }}">
+                            Log
+                        </a> -->
+                        <a href="{{ url_for('admins.banned_users') }}"
+                            class="list-group-item btn btn-settings my-1 {{ 'btn-settings-active' if active == 'banned_users' }}">
+                            Banned Users
+                        </a>
+                    </ul>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-8 mt-1">
+            {% block admin_contents %} {% endblock %}
+        </div>
+    </div>
+</div>
+{% endblock %}

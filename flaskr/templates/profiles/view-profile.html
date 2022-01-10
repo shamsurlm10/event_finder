@@ -1,0 +1,557 @@
+{% extends "layout.html" %} {% block title %} {{ user.profile.first_name }} {{ user.profile.last_name }} {% endblock %}
+{% block add_styles %}
+<link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='styles/profiles/view-profile.css') }}"> {%
+endblock %} {% block content %}
+<div class="container mt-1">
+    <img src="{{ url_for('static', filename=user.profile.cover_photo) }}" alt="Cover photo" class="cover-photo">
+    <div class="d-flex-custom">
+        <div class="flex-shrink-1 profile-photo-container d-flex">
+            <img src="{{ url_for('static', filename=user.profile.profile_photo) }}" alt="Profile Photo"
+                class="profile-photo flex-grow-1">
+            <div class="sm-screen-only flex-row w-100">
+                {% if user.id == current_user.id %}
+                <div class="d-flex">
+                    <div class="mt-2 ms-auto">
+                        <a href="{{ url_for('profiles.change_profile_info') }}" class="btn btn-light btn-sm">
+                            <i class="fas fa-cog mx-1"></i>
+                        </a>
+                    </div>
+                </div>
+                {% else %}
+                <div class="mt-2">
+                    <div class="d-flex">
+                        {% if current_user.profile.profile_bookmarks != None and user.profile.id in
+                        current_user.profile.profile_bookmarks %}
+                        <a href="{{ url_for('profiles.unbookmark_profile', id=user.profile.id) }}"
+                            class="btn btn-dark btn-sm ms-auto">
+                            <i class="fas fa-thumbtack mx-1"></i>
+                        </a>
+                        {% else %}
+                        <a href="{{ url_for('profiles.bookmark_profile', id=user.profile.id) }}"
+                            class="btn btn-light btn-sm ms-auto">
+                            <i class="bi bi-pin-angle-fill mx-1"></i>
+                        </a>
+                        {% endif %}
+                        <a href="#" class="btn btn-light btn-sm ms-1" data-bs-toggle="modal"
+                            data-bs-target="#report-profile-modal">
+                            <i class="bi bi-exclamation-triangle-fill mx-1"></i>
+                        </a>
+                        {% if current_user.role.value == "admin" %}
+                        {% if user.profile.banned == None %}
+                        <button class="btn btn-sm btn-danger ms-1" data-bs-toggle="modal"
+                            data-bs-target="#banuser-modal">
+                            <i class="fas fa-user-slash"></i>
+                        </button>
+                        {% else %}
+                        <a href="{{ url_for('admins.unban_user', id=user.id) }}" class="btn btn-sm btn-primary ms-1">
+                            <i class="fas fa-user-slash"></i>
+                        </a>
+                        {% endif %}
+                        {% if user.role.value == "general" %}
+                        <a class="btn btn-sm btn-primary ms-1" href="{{ url_for('admins.promote_host', id=user.id) }}">
+                            <i class="fas fa-angle-double-up me-1"></i></i>
+                        </a>
+                        {% elif user.role.value == "host" %}
+                        <a href="{{ url_for('admins.demote_host', id=user.id) }}" class="btn btn-sm btn-danger ms-1">
+                            <i class="fas fa-angle-double-down me-1"></i>
+                        </a>
+                        {% endif %}
+                        {% endif %}
+                    </div>
+                </div>
+                {% endif %}
+            </div>
+        </div>
+        <div class="d-flex w-100">
+            <div class="mt-2 w-100 profile-info">
+                <h2 class="name fw-bold">{{user.profile.first_name}} {{user.profile.last_name}}</h2>
+                <p class="info text-capitalize fw-bold"><i class="bi bi-award-fill"></i> {{user.role.value}}</p>
+                <p class="info fw-bold"><i class="bi bi-envelope-fill"></i> {{user.email}}</p>
+                {% if user.profile.nid_number %}
+                <p class="info fw-bold"><i class="fas fa-address-card"></i> {{user.profile.nid_number}}</p>
+                {% endif %}
+                <p class="info fw-bold">
+                    <i class="bi bi-star-fill"></i> {{ user.profile.get_rating() }}
+                </p>
+                <p class="info mt-1">{{ user.profile.bio if user.profile.bio }}</p>
+            </div>
+            <div class="sm-screen-hide">
+                <div class="d-flex flex-column mt-2 flex-shrink-1">
+                    {% if user.id == current_user.id %}
+                    <a href="{{ url_for('profiles.change_profile_info') }}" class="btn btn-light side-btn btn-sm">
+                        <i class="fas fa-cog me-1"></i></i><span>Edit Profile</span>
+                    </a>
+                    {% else %}
+                    {% if current_user.profile.profile_bookmarks != None and user.profile.id in
+                    current_user.profile.profile_bookmarks %}
+                    <a href="{{ url_for('profiles.unbookmark_profile', id=user.profile.id) }}"
+                        class="btn btn-dark side-btn btn-sm">
+                        <i class="fas fa-thumbtack me-1"></i><span>Bookmarked</span>
+                    </a>
+                    {% else %}
+                    <a href="{{ url_for('profiles.bookmark_profile', id=user.profile.id) }}"
+                        class="btn btn-light side-btn btn-sm">
+                        <i class="bi bi-pin-angle-fill me-1"></i><span>Bookmark</span>
+                    </a>
+                    {% endif %}
+                    <a href="#" class="btn btn-light side-btn btn-sm mt-1" data-bs-toggle="modal"
+                        data-bs-target="#report-profile-modal">
+                        <i class="bi bi-exclamation-triangle-fill me-1"></i><span>Report</span>
+                    </a>
+                    {% if current_user.role.value == "admin" %}
+                    {% if user.profile.banned == None %}
+                    <button class="btn side-btn btn-sm btn-danger mt-1" data-bs-toggle="modal"
+                        data-bs-target="#banuser-modal">
+                        <i class="fas fa-user-slash me-1"></i><span>Ban User</span>
+                    </button>
+                    {% else %}
+                    <a href="{{ url_for('admins.unban_user', id=user.id) }}"
+                        class="btn side-btn btn-sm btn-primary mt-1">
+                        <i class="fas fa-user-slash me-1"></i><span>Unban User</span>
+                    </a>
+                    {% endif %}
+                    {% if user.role.value == "general" %}
+                    <a class="btn side-btn btn-sm btn-primary mt-1"
+                        href="{{ url_for('admins.promote_host', id=user.id) }}">
+                        <i class="fas fa-angle-double-up me-1"></i></i><span>Promote</span>
+                    </a>
+                    {% elif user.role.value == "host" %}
+                    <a href="{{ url_for('admins.demote_host', id=user.id) }}"
+                        class="btn side-btn btn-sm btn-danger mt-1">
+                        <i class="fas fa-angle-double-down me-1"></i><span>Demote</span>
+                    </a>
+                    {% endif %}
+                    {% endif %}
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="card card-body shadow-card mt-4 d-flex flex-row">
+        <div class="d-flex flex-grow-1">
+            <div>
+                <div class="info">
+                    <i class="fas fa-calendar-alt"></i><span class="mx-2">Joined on
+                        {{current_user.get_joindate()}}</span>
+                </div>
+                <div class="info">
+                    <i class="fas fa-lightbulb"></i><span class="mx-2">Born on
+                        {{user.profile.date_of_birth.strftime("%B, %Y")}}</span>
+                </div>
+                <div class="info">
+                    {% if user.profile.gender == "male" %}
+                    <i class="fas fa-mars"></i><span class="mx-2">Male</span>
+                    {% elif user.profile.gender == "female" %}
+                    <i class="bi bi-gender-female"></i><span class="mx-2">Female</span>
+                    {% else %}
+                    <i class="bi bi-gender-trans"></i><span class="mx-2">Other</span>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+        <div class="align-self-center flex-shrink-1 d-flex flex-row sm-screen-hide social-link">
+            {% if current_user.profile.social_links.facebook %}
+            <a href="{{current_user.profile.social_links.facebook}}" target="_blank">
+                <i class="fab fa-facebook-square link-logo"></i>
+            </a>
+            {% endif %}
+            {% if current_user.profile.social_links.twitter %}
+            <a href="{{current_user.profile.social_links.twitter}}" target="_blank">
+                <i class="fab fa-twitter-square link-logo ms-2"></i>
+            </a>
+            {% endif %}
+            {% if current_user.profile.social_links.github %}
+            <a href="{{current_user.profile.social_links.github}}" target="_blank">
+                <i class="fab fa-github-square link-logo ms-2"></i>
+            </a>
+            {% endif %}
+            {% if current_user.profile.social_links.linkedin %}
+            <a href="{{current_user.profile.social_links.linkedin}}" target="_blank">
+                <i class="fab fa-linkedin link-logo ms-2"></i>
+            </a>
+            {% endif %}
+            {% if current_user.profile.social_links.website %}
+            <a href="{{current_user.profile.social_links.website}}" target="_blank">
+                <i class="fas fa-globe-asia link-logo ms-2"></i>
+            </a>
+            {% endif %}
+        </div>
+    </div>
+    <div class="d-flex justify-content-center sm-screen-only social-link mt-3">
+        {% if current_user.profile.social_links.facebook %}
+        <a href="{{current_user.profile.social_links.facebook}}" target="_blank">
+            <i class="fab fa-facebook-square link-logo"></i>
+        </a>
+        {% endif %}
+        {% if current_user.profile.social_links.twitter %}
+        <a href="{{current_user.profile.social_links.twitter}}" target="_blank">
+            <i class="fab fa-twitter-square link-logo ms-2"></i>
+        </a>
+        {% endif %}
+        {% if current_user.profile.social_links.github %}
+        <a href="{{current_user.profile.social_links.github}}" target="_blank">
+            <i class="fab fa-github-square link-logo ms-2"></i>
+        </a>
+        {% endif %}
+        {% if current_user.profile.social_links.linkedin %}
+        <a href="{{current_user.profile.social_links.linkedin}}" target="_blank">
+            <i class="fab fa-linkedin link-logo ms-2"></i>
+        </a>
+        {% endif %}
+        {% if current_user.profile.social_links.website %}
+        <a href="{{current_user.profile.social_links.website}}" target="_blank">
+            <i class="fas fa-globe-asia link-logo ms-2"></i>
+        </a>
+        {% endif %}
+    </div>
+    <div class="row mt-4">
+        <div class="col-md-4">
+            <div class="d-flex align-items-center">
+                <div class="flex-grow-1">
+                    <h1 class="profile-header">Reviews</h1>
+                </div>
+                {% if user.id != current_user.id %}
+                <button class="btn btn-light review-write-btn" data-bs-toggle="modal"
+                    data-bs-target="#write-review-modal"><i
+                        class="bi bi-vector-pen me-1"></i><span>Write</span></button>
+                {% endif %}
+            </div>
+            <!-- All the reviews there -->
+            {% if not user.profile.reviews or len(user.profile.reviews) == 0 %}
+            <p class="text-center fw-bold">No reviews available</p>
+            {% else %}
+            {% for review in user.profile.reviews %}
+            <div class="card card-body review-card mt-2">
+                <span style="font-weight: bold; font-size: 1.1rem;">
+                    {{ review.get_reviewed_by().get_fullname() }}
+                </span>
+                <span>
+                    {% for i in range(review.rating) %}
+                    <i class="fas fa-star"></i>
+                    {% endfor %}
+                </span>
+                <div style="font-size: 0.8rem;">
+                    {{ review.text }}
+                </div>
+            </div>
+            {% endfor %}
+            {% endif %}
+            <!-- End -->
+        </div>
+        <div class="col-md-8">
+            <!-- Events -->
+
+            <ul class="nav nav-pills mb-3" id="pills-tab" role="tablist">
+                <li class="nav-item" role="presentation">
+                    <button class="nav-link text-dark active" id="pills-joined-tab" data-bs-toggle="pill"
+                        data-bs-target="#pills-joined" type="button" role="tab" aria-controls="pills-joined"
+                        aria-selected="true">Joined Events</button>
+                </li>
+                <li class="nav-item" role="presentation">
+                    <button class="nav-link text-dark" id="pills-hosted-tab" data-bs-toggle="pill"
+                        data-bs-target="#pills-hosted" type="button" role="tab" aria-controls="pills-hosted"
+                        aria-selected="false">Hosted Events</button>
+                </li>
+                <li class="nav-item" role="presentation">
+                    <button class="nav-link text-dark" id="pills-ongoing-tab" data-bs-toggle="pill"
+                        data-bs-target="#pills-ongoing" type="button" role="tab" aria-controls="pills-ongoing"
+                        aria-selected="false">Ongoing Events</button>
+                </li>
+            </ul>
+            <div class="tab-content" id="pills-tabContent">
+                <div class="tab-pane fade show active" id="pills-joined" role="tabpanel"
+                    aria-labelledby="pills-joined-tab">
+                    {% for event in joined_events %}
+                    <div class="col">
+                        <div class="card shadow-card event-card h-100 mt-3">
+                            <img src="{{ url_for('static', filename=event.cover_photo) }}"
+                                class="card-img-top event-card-img" alt="Cover photo of the event">
+                            <div class="card-body">
+                                <h6 class="card-title fw-bold">{{ event.title }}</h6>
+                                <div class="card-text text-{{ event.event_status().category }} fw-bold mb-1">
+                                    {{ event.event_status().message }}
+                                </div>
+                                <div class="card-text">
+                                    <strong>
+                                        <i class="fas fa-map-marker-alt"></i> Location:
+                                    </strong>
+                                    {{ event.place_name }}
+                                </div>
+                                <div class="card-text">
+                                    <strong>
+                                        <i class="fas fa-clock"></i> Date:
+                                    </strong>
+                                    {{ event.get_start_date() }} at {{ event.get_start_time() }}
+                                </div>
+                                <div class="card-text">
+                                    <strong>
+                                        <i class="fas fa-user-tie"></i> Host:
+                                    </strong>
+                                    <a href="{{ url_for('profiles.view_profile', id=event.host.id) }}"
+                                        class="text-reset">
+                                        {{ event.host.get_fullname() }}
+                                    </a>
+                                </div>
+                                <div class="card-text">
+                                    <strong>
+                                        <i class="fas fa-money-check-alt"></i> Register Fee:
+                                    </strong>
+                                    {{ event.fee }} Taka
+                                </div>
+                                <div class="card-text">
+                                    <strong>
+                                        <i class="fas fa-users"></i> Members:
+                                    </strong>
+                                    {{ len(event.members) if event.members else 0 }} out of {{ event.max_member }}
+                                </div>
+                                <a href="{{ url_for('events.view_event', id=event.id) }}"
+                                    class="btn btn-dark w-100 btn-sm mt-3">
+                                    Explore the event
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                    {% endfor %}
+                </div>
+                <div class="tab-pane fade" id="pills-hosted" role="tabpanel" aria-labelledby="pills-hosted-tab">
+                    {% for event in hosted_events %}
+                    <div class="col">
+                        <div class="card shadow-card event-card h-100  mt-3">
+                            <img src="{{ url_for('static', filename=event.cover_photo) }}"
+                                class="card-img-top event-card-img" alt="Cover photo of the event">
+                            <div class="card-body">
+                                <h6 class="card-title fw-bold">{{ event.title }}</h6>
+                                <div class="card-text text-{{ event.event_status().category }} fw-bold mb-1">
+                                    {{ event.event_status().message }}
+                                </div>
+                                <div class="card-text">
+                                    <strong>
+                                        <i class="fas fa-map-marker-alt"></i> Location:
+                                    </strong>
+                                    {{ event.place_name }}
+                                </div>
+                                <div class="card-text">
+                                    <strong>
+                                        <i class="fas fa-clock"></i> Date:
+                                    </strong>
+                                    {{ event.get_start_date() }} at {{ event.get_start_time() }}
+                                </div>
+                                <div class="card-text">
+                                    <strong>
+                                        <i class="fas fa-user-tie"></i> Host:
+                                    </strong>
+                                    <a href="{{ url_for('profiles.view_profile', id=event.host.id) }}"
+                                        class="text-reset">
+                                        {{ event.host.get_fullname() }}
+                                    </a>
+                                </div>
+                                <div class="card-text">
+                                    <strong>
+                                        <i class="fas fa-money-check-alt"></i> Register Fee:
+                                    </strong>
+                                    {{ event.fee }} Taka
+                                </div>
+                                <div class="card-text">
+                                    <strong>
+                                        <i class="fas fa-users"></i> Members:
+                                    </strong>
+                                    {{ len(event.members) if event.members else 0 }} out of {{ event.max_member }}
+                                </div>
+                                <a href="{{ url_for('events.view_event', id=event.id) }}"
+                                    class="btn btn-dark w-100 btn-sm mt-3">
+                                    Explore the event
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                    {% endfor %}
+                </div>
+                <div class="tab-pane fade" id="pills-ongoing" role="tabpanel" aria-labelledby="pills-ongoing-tab">
+                    {% for event in joined_events %}
+                    <div class="col">
+                        {% if event.event_status().get("status") %}
+                        <div class="card shadow-card event-card h-100 mt-3">
+                            <img src="{{ url_for('static', filename=event.cover_photo) }}"
+                                class="card-img-top event-card-img" alt="Cover photo of the event">
+                            <div class="card-body">
+                                <h6 class="card-title fw-bold">{{ event.title }}</h6>
+                                <div class="card-text text-{{ event.event_status().category }} fw-bold mb-1">
+                                    {{ event.event_status().message }}
+                                </div>
+                                <div class="card-text">
+                                    <strong>
+                                        <i class="fas fa-map-marker-alt"></i> Location:
+                                    </strong>
+                                    {{ event.place_name }}
+                                </div>
+                                <div class="card-text">
+                                    <strong>
+                                        <i class="fas fa-clock"></i> Date:
+                                    </strong>
+                                    {{ event.get_start_date() }} at {{ event.get_start_time() }}
+                                </div>
+                                <div class="card-text">
+                                    <strong>
+                                        <i class="fas fa-user-tie"></i> Host:
+                                    </strong>
+                                    <a href="{{ url_for('profiles.view_profile', id=event.host.id) }}"
+                                        class="text-reset">
+                                        {{ event.host.get_fullname() }}
+                                    </a>
+                                </div>
+                                <div class="card-text">
+                                    <strong>
+                                        <i class="fas fa-money-check-alt"></i> Register Fee:
+                                    </strong>
+                                    {{ event.fee }} Taka
+                                </div>
+                                <div class="card-text">
+                                    <strong>
+                                        <i class="fas fa-users"></i> Members:
+                                    </strong>
+                                    {{ len(event.members) if event.members else 0 }} out of {{ event.max_member }}
+                                </div>
+                                <a href="{{ url_for('events.view_event', id=event.id) }}"
+                                    class="btn btn-dark w-100 btn-sm mt-3">
+                                    Explore the event
+                                </a>
+                            </div>
+                        </div>
+                        {% endif %}
+                    </div>
+                    {% endfor %}
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- Modal -->
+    <div class="modal fade" id="write-review-modal" tabindex="-1" aria-labelledby="review-modal" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="review-modal">Writre a review of {{
+                        user.profile.get_fullname() }}
+                    </h5>
+                    <button type="button" class="btn" data-bs-dismiss="modal" aria-label="Close"><i
+                            class="bi bi-x-lg"></i></button>
+                </div>
+                <div class="modal-body">
+                    <form action="{{ url_for('profiles.review_profile', id=user.id) }}" method="POST">
+                        <div class="form-floating mb-3">
+                            <input type="text" class="form-control" id="review" name="review"
+                                placeholder="Write a short review" />
+                            <label for="review">
+                                Write a short review
+                            </label>
+                        </div>
+                        <select class="form-select mb-3" aria-label="rate-user" name="rating">
+                            <option selected disabled class="d-none">Rate this user</option>
+                            <option value="1">Very Bad - 1 Star</option>
+                            <option value="2">Bad - 2 Star</option>
+                            <option value="3">Good - 3 Star</option>
+                            <option value="4">Very Good - 4 Star</option>
+                            <option value="5">Best - 5 Star</option>
+                        </select>
+                        <div class="d-flex align-items-center">
+                            <button type="submit" class="btn btn-sm btn-primary me-2 px-2">Submit</button>
+                            <button type="button" class="btn btn-sm btn-dark px-2"
+                                data-bs-dismiss="modal">Close</button>
+
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- Ban User Modal -->
+    <div class="modal fade" id="banuser-modal" tabindex="-1" aria-labelledby="banuser-modal" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content">
+                <div class="modal-header modal-header-custom">
+                    <h5 class="modal-title" id="banuser-modal">Ban {{ user.profile.get_fullname() }}</h5>
+                    <button type="button" class="btn" data-bs-dismiss="modal" aria-label="Close"><i
+                            class="bi bi-x-lg"></i></button>
+                </div>
+                <form action="{{ url_for('admins.ban_user', id=user.id) }}" method="POST">
+                    {{ ban_form.hidden_tag() }}
+                    <div class="modal-body">
+                        Are you sure? You want to ban this user?
+                        <br>
+                        <small class="text-muted">You can unban this user anytime.</small>
+                        <div class="form-group mb-2">
+                            {{ ban_form.reason.label(class="form-label mb-0") }}
+                            {% if ban_form.reason.errors %}
+                            {{ ban_form.reason(class="form-control input-box is-invalid", id="reason") }}
+                            <div class="invalid-feeedback">
+                                {% for error in ban_form.reason.errors %}
+                                <span>{{ error }}</span>
+                                {% endfor %}
+                            </div>
+                            {% else %}
+                            {{ ban_form.reason(class="form-control input-box", id="reason") }}
+                            {% endif %}
+                        </div>
+                        <div class="form-group mb-2">
+                            {{ ban_form.days.label(class="form-label mb-0") }}
+                            {% if ban_form.days.errors %}
+                            {{ ban_form.days(class="form-control input-box is-invalid", id="days") }}
+                            <div class="invalid-feeedback">
+                                {% for error in ban_form.days.errors %}
+                                <span>{{ error }}</span>
+                                {% endfor %}
+                            </div>
+                            {% else %}
+                            {{ ban_form.days(class="form-control input-box", id="days") }}
+                            {% endif %}
+                        </div>
+                    </div>
+                    <div class="modal-footer modal-footer-custom">
+                        <button type="button" class="btn btn-sm btn-dark" data-bs-dismiss="modal">Close</button>
+                        {{ ban_form.submit(class="btn btn-sm btn-danger", id="submit-ban") }}
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+    <!-- Complain Modal -->
+    <div class="modal fade" id="report-profile-modal" tabindex="-1" aria-labelledby="report-profile-modal"
+        aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content">
+                <div class="modal-header modal-header-custom">
+                    <h5 class="modal-title" id="report-profile-modal">
+                        Report Against {{ user.profile.get_fullname() }}
+                    </h5>
+                    <button type="button" class="btn" data-bs-dismiss="modal" aria-label="Close"><i
+                            class="bi bi-x-lg"></i></button>
+                </div>
+                <form action="{{ url_for('users.report_user', id=user.id) }}" method="POST">
+                    <h6 class="ms-3 text-muted mb-0">Please fill out the form</h6>
+                    <div class="modal-body">
+                        <div class="mb-2">
+                            <label for="report-category">Report Type</label>
+                            <select class="form-select" aria-label="report-category" id="report-category"
+                                name="report-category">
+                                <option selected disabled value="">Selete the category</option>
+                                <option value="cheater">Cheater</option>
+                                <option value="scammer">Scammer</option>
+                                <option value="harassment">Harassment</option>
+                                <option value="other">Other</option>
+                            </select>
+                        </div>
+                        <div class="mb-2">
+                            <label for="report-text">Describe the situation</label>
+                            <textarea name="report-text" class="form-control" id="report-text" cols="30" rows="5"
+                                required></textarea>
+                        </div>
+                    </div>
+                    <div class="modal-footer modal-footer-custom">
+                        <button type="button" class="btn btn-sm btn-dark" data-bs-dismiss="modal">Close</button>
+                        <button class="btn btn-sm btn-danger">Report</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

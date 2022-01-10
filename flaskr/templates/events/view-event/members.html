@@ -1,0 +1,30 @@
+{% extends "events/view-event/view-event-layout.html" %}
+{% block title %} Event Posts {% endblock %}
+
+{% block event_data %}
+<div class="row">
+    <div class="col-3 d-flex flex-column my-2 px-2">
+        <h3 class="fw-bold" style="font-size: 0.9rem;">Members Categories</h3>
+        {% if current_user.profile and current_user.profile.id == event.host.id %}
+        <a href="{{ url_for('events.view_event', id=event.id, filter='members', members='decline') }}" class="my-1 btn btn-sm {{ 'btn-dark' if sub_menu == 'decline-members' else 'btn-light' }}">
+            Declined Members
+        </a>
+        <a href="{{ url_for('events.view_event', id=event.id, filter='members', members='pending') }}" class="my-1 btn btn-sm {{ 'btn-dark' if sub_menu == 'pending-members' else 'btn-light' }}">
+            Pending Members
+        </a>
+        {% endif %}
+        <a href="{{ url_for('events.view_event', id=event.id, filter='members', members='members') }}" class="my-1 btn btn-sm {{ 'btn-dark' if sub_menu == 'members' else 'btn-light' }}">
+            Joined Members
+        </a>
+    </div>
+    <div class="col-7 offset-1 px-5 mt-2">
+        {% if sub_menu == "pending-members" and current_user.profile.id == event.host.id %}
+        {% include "events/view-event/members-sub-file/pending-members.html" %}
+        {% elif sub_menu == "decline-members" and current_user.profile.id == event.host.id %}
+        {% include "events/view-event/members-sub-file/decline-members.html" %}
+        {% elif sub_menu == "members" or not sub_menu %}
+        {% include "events/view-event/members-sub-file/joined-members.html" %}
+        {% endif %}
+    </div>
+</div>
+{% endblock %}

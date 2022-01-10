@@ -1,0 +1,65 @@
+{% extends "layout.html" %}
+
+{% block title %} Login to existing account {% endblock %}
+
+{% block content %}
+<div class="container form-brand">
+
+    <div class="row">
+        <div class="col-xl-6 offset-xl-3 col-md-8 offset-md-2">
+            <div class="text-center">
+                <img src="{{ url_for('static', filename='images/default/Logos/FINDER-Dark.png') }}" alt="Brand Logo"
+                    width="180px">
+            </div>
+            <div class="mt-4">
+                <div class="card card-body shadow-card p-4">
+                    <form method="POST">
+                        {{ form.hidden_tag() }}
+                        <div>
+                            {{ form.email.label(class="form-label mb-0") }}
+                            {% if form.email.errors%}
+                            {{ form.email(class="form-control input-box is-invalid", id="email") }}
+                            <div class="invalid-feeedback">
+                                {% for error in form.email.errors %}
+                                <span>{{ error }}</span>
+                                {%endfor%}
+                            </div>
+                            {% else %}
+                            {{ form.email(class="form-control input-box", id="email") }}
+                            {%endif%}
+                        </div>
+                        <div class="mt-2">
+                            {{form.password.label(class="form-label mb-0")}}
+                            {% if form.password.errors%}
+                            {{form.password(class="form-control input-box is-invalid", id="password")}}
+                            <div class="invalid-feeedback">
+                                {% for error in form.password.errors %}
+                                <span>{{ error }}</span>
+                                {%endfor%}
+                            </div>
+                            {%else%}
+                            {{form.password(class="form-control input-box", id="password")}}
+                            {%endif%}
+                        </div>
+                        <div div class="mt-2">
+                            {{ form.remember_me(class="form-check-input") }}
+                            {{ form.remember_me.label(class="form-check-label") }}
+                        </div>
+                        <div class="mt-2">
+                            {{form.submit(class="btn btn-dark form-control")}}
+                        </div>
+                    </form>
+                    <div class="mt-2">
+                        Do not have an account? <a href="{{ url_for('users.register_user') }}" class="link-dark"
+                            style="text-decoration: none"><b>Create One!</b></a>
+                    </div>
+                    <div class="mt-2">
+                        <a href="{{ url_for('users.forget_password') }}" class="link-dark"
+                            style="text-decoration: none"><b><u>Forgot your password</u></b></a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

@@ -1,0 +1,14 @@
+{% extends "layout.html" %}
+
+{% block title %} Error occured {% endblock %}
+
+{% block content %}
+<div class="container mt-1">
+    <h1 class="mt-5 text-center display-1 fw-bold" style="color: crimson;">
+        {{ status }}
+    </h1>
+    <div class="text-center display-3">
+        {{ message }}
+    </div>
+</div>
+{% endblock %}

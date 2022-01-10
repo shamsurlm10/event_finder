@@ -1,0 +1,27 @@
+{% for payment in event.pending_payments %}
+{% if payment.decline %}
+<div class="col mb-2">
+    <div class="card card-body shadow-card h-100">
+        <div class="d-flex align-items-center justify-content-between">
+            <div class="d-flex align-items-center">
+                <img class="pending-member-img" src="{{ url_for('static', filename=payment.profile.profile_photo) }}" />
+                <div class="mx-2">
+                    <a href="{{ url_for('profiles.view_profile', id=payment.profile.id) }}"
+                        class="fw-bold link-dark my-0" style="font-size: 1.1rem;">{{ payment.profile.get_fullname()
+                        }}</a>
+                    <div class="text-muted my-0" style="font-size: 0.7rem;">{{ payment.profile.user.role.value }}</div>
+                    <div class="text-muted my-0" style="font-size: 0.7rem;">{{ payment.profile.user.email }}</div>
+                    <div class="my-0" style="font-size: 0.8rem;">TRNX ID: {{ payment.trnx }}</div>
+                </div>
+            </div>
+            <a href="{{ url_for('events.accept_pending_members', event_id=event.id, profile_id=payment.profile.id) }}"
+                    class="btn btn-sm btn-primary me-2">Approve</a>
+        </div>
+        <div class="px-2 my-2">
+            <span class="fw-bold text-danger">Reason</span> <br />
+            {{ payment.decline.message }}
+        </div>
+    </div>
+</div>
+{% endif %}
+{% endfor %}

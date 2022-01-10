@@ -1,0 +1,47 @@
+{% extends "layout.html" %}
+
+{% block add_styles %}
+<link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='styles/profiles/settings.css') }}">
+<link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='styles/profiles/verify-email.css') }}">
+<link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='styles/profiles/profile-info.css') }}">
+<link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='styles/profiles/change-password.css') }}">
+<link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='styles/profiles/change-photo.css') }}">
+{% endblock %}
+
+{% block content %}
+<div class="container mt-1">
+    <div class="row">
+        <div class="col-md-4">
+            <div class="container">
+                <div class="col-10 offset-1">
+                    <ul class="list-group text-center list-group-custom">
+                        <a href="{{ url_for('profiles.change_profile_info') }}"
+                            class="list-group-item btn btn-settings my-1 {{ 'btn-settings-active' if active == 'edit-profile-info' }}">
+                            Edit Profile Info
+                        </a>
+                        <a href="{{ url_for('profiles.change_connections') }}"
+                            class="list-group-item btn btn-settings my-1 {{ 'btn-settings-active' if active == 'change-connections' }}">
+                            Connections
+                        </a>
+                        <a href="{{ url_for('profiles.change_photos') }}"
+                            class="list-group-item btn btn-settings my-1 {{ 'btn-settings-active' if active == 'change-photos' }}">
+                            Change Photos
+                        </a>
+                        <a href="{{ url_for('profiles.verify_email') }}"
+                            class="list-group-item btn btn-settings my-1 {{ 'btn-settings-active' if active == 'verify-email' }}">
+                            Verify Email Address
+                        </a>
+                        <a href="{{ url_for('profiles.change_password') }}"
+                            class="list-group-item btn btn-settings my-1 {{ 'btn-settings-active' if active == 'change-password' }}">
+                            Change Password
+                        </a>
+                    </ul>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-8">
+            {% block settings %} {% endblock %}
+        </div>
+    </div>
+</div>
+{% endblock %}

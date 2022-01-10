@@ -1,0 +1,17 @@
+{% for member in event.get_members() %}
+<div class="col mb-2">
+    <div class="card card-body shadow-card h-100">
+        <div class="d-flex align-items-center justify-content-between">
+            <div class="d-flex align-items-center">
+                <img class="pending-member-img"
+                    src="{{ url_for('static', filename=member.profile_photo) }}" />
+                <div class="mx-2">
+                    <a href="{{ url_for('profiles.view_profile', id=member.id) }}" class="fw-bold link-dark my-0" style="font-size: 1.1rem;">{{ member.get_fullname() }}</a>
+                    <div class="text-muted my-0" style="font-size: 0.7rem;">{{ member.user.role.value }}</div>
+                    <div class="text-muted my-0" style="font-size: 0.7rem;">{{ member.user.email }}</div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endfor %}

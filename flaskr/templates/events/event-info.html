@@ -1,0 +1,169 @@
+{% extends "events/event-settings-layout.html" %}
+
+{% block title %} Event Info {% endblock %}
+
+{% block event_settings %}
+<h2 class="settings-header">Event Informations</h2>
+<div class="card card-body shadow-card p-4">
+    <div class="mt-1">
+        <img src="{{url_for('static', filename=event.cover_photo)}}" alt="Event Cover Photo"
+            class="cover-photo w-100" />
+    </div>
+    <form method="POST" novalidate enctype="multipart/form-data">
+        {{ form.hidden_tag() }}
+        <div class="row g-2 mt-1">
+            <div class="col">
+                {{ form.event_location.label(class="form-label mb-0") }}
+                {% if form.event_location.errors %}
+                {{ form.event_location(class="form-control input-box is-invalid", id="event_location")}}
+                <div class="invalid-feedback">
+                    {% for error in form.event_location.errors %}
+                    <span>{{ error }}</span>
+                    {% endfor %}
+                </div>
+                {% else %}
+                {{ form.event_location(class="form-control input-box", id="event_location") }}
+                {% endif %}
+            </div>
+            <div class="col">
+                {{ form.event_fee.label(class="form-label mb-0") }}
+                {% if form.event_fee.errors %}
+                {{ form.event_fee(class="form-control input-box is-invalid", id="event_fee")}}
+                <div class="invalid-feedback">
+                    {% for error in form.event_fee.errors %}
+                    <span>{{ error }}</span>
+                    {% endfor %}
+                </div>
+                {% else %}
+                {{ form.event_fee(class="form-control input-box", id="event_fee") }}
+                {% endif %}
+            </div>
+        </div>
+        <div class="mt-2">
+            {{ form.event_title.label(class="form-label mb-0") }}
+            {% if form.event_title.errors %}
+            {{ form.event_title(class="form-control input-box is-invalid")}}
+            <div class="invalid-feedback">
+                {% for error in form.event_title.errors %}
+                <span>{{ error }}</span>
+                {% endfor %}
+            </div>
+            {% else %}
+            {{ form.event_title(class="form-control input-box", id="event_title") }}
+            {% endif %}
+        </div>
+        <div class="row g-2 mt-1">
+            <div class="col">
+                {{ form.event_days_count.label(class="form-label mb-0") }}
+                {% if form.event_days_count.errors %}
+                {{ form.event_days_count(class="form-control input-box is-invalid", id="event_days_count")}}
+                <div class="invalid-feedback">
+                    {% for error in form.event_days_count.errors %}
+                    <span>{{ error }}</span>
+                    {% endfor %}
+                </div>
+                {% else %}
+                {{ form.event_days_count(class="form-control input-box", id="event_days_count") }}
+                {% endif %}
+            </div>
+            <div class="col">
+                {{ form.event_nights_count.label(class="form-label mb-0") }}
+                {% if form.event_nights_count.errors %}
+                {{ form.event_nights_count(class="form-control input-box is-invalid", id="event_nights_count")}}
+                <div class="invalid-feedback">
+                    {% for error in form.event_nights_count.errors %}
+                    <span>{{ error }}</span>
+                    {% endfor %}
+                </div>
+                {% else %}
+                {{ form.event_nights_count(class="form-control input-box", id="event_nights_count") }}
+                {% endif %}
+            </div>
+        </div>
+        <div class="mt-2">
+            {{ form.event_description.label(class="form-label mb-0") }}
+            {% if form.event_description.errors %}
+            {{ form.event_description(class="form-control input-box event-desc-edit is-invalid",
+            id="event_description")}}
+            <div class="invalid-feedback">
+                {% for error in form.event_description.errors %}
+                <span>{{ error }}</span>
+                {% endfor %}
+            </div>
+            {% else %}
+            {{ form.event_description(class="form-control event-desc-edit input-box", id="event_description") }}
+            {% endif %}
+        </div>
+        <div class="row g-2 mt-1">
+            <div class="col">
+                {{ form.event_start_time.label(class="form-label mb-0") }}
+                {% if form.event_start_time.errors %}
+                {{ form.event_start_time(class="form-control input-box is-invalid", id="event_start_time")}}
+                <div class="invalid-feedback">
+                    {% for error in form.event_start_time.errors %}
+                    <span>{{ error }}</span>
+                    {% endfor %}
+                </div>
+                {% else %}
+                {{ form.event_start_time(class="form-control input-box", id="event_start_time") }}
+                {% endif %}
+            </div>
+            <div class="col">
+                {{ form.hotel_name.label(class="form-label mb-0") }}
+                {% if form.hotel_name.errors %}
+                {{ form.hotel_name(class="form-control input-box is-invalid", id="hotel_name")}}
+                <div class="invalid-feedback">
+                    {% for error in form.hotel_name.errors %}
+                    <span>{{ error }}</span>
+                    {% endfor %}
+                </div>
+                {% else %}
+                {{ form.hotel_name(class="form-control input-box", id="hotel_name") }}
+                {% endif %}
+            </div>
+        </div>
+        <div class="mt-2">
+            {{ form.hotel_web_link.label(class="form-label mb-0") }}
+            {% if form.hotel_web_link.errors %}
+            {{ form.hotel_web_link(class="form-control input-box is-invalid", id="hotel_web_link")}}
+            <div class="invalid-feedback">
+                {% for error in form.hotel_web_link.errors %}
+                <span>{{ error }}</span>
+                {% endfor %}
+            </div>
+            {% else %}
+            {{ form.hotel_web_link(class="form-control input-box", id="hotel_web_link") }}
+            {% endif %}
+        </div>
+        <div class="mt-2">
+            {{ form.phone_number.label(class="form-label mb-0") }}
+            {% if form.phone_number.errors %}
+            {{ form.phone_number(class="form-control input-box is-invalid", id="phone_number")}}
+            <div class="invalid-feedback">
+                {% for error in form.phone_number.errors %}
+                <span>{{ error }}</span>
+                {% endfor %}
+            </div>
+            {% else %}
+            {{ form.phone_number(class="form-control input-box", id="phone_number") }}
+            {% endif %}
+        </div>
+        <div class="mt-1">
+            {{ form.event_cover_photo.label(class="form-label mb-0") }}
+            {% if form.event_cover_photo.errors %}
+            {{ form.event_cover_photo(class="form-control input-box is-invalid", id="event_cover_photo")}}
+            <div class="invalid-feedback">
+                {% for error in form.event_cover_photo.errors %}
+                <span>{{ error }}</span>
+                {% endfor %}
+            </div>
+            {% else %}
+            {{ form.event_cover_photo(class="form-control input-box", id="event_cover_photo") }}
+            {% endif %}
+        </div>
+        <div class="mt-2">
+            {{ form.submit(class="btn btn-dark form-control") }}
+        </div>
+    </form>
+</div>
+{% endblock %}

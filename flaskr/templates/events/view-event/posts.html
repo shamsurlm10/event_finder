@@ -1,0 +1,37 @@
+{% extends "events/view-event/view-event-layout.html" %}
+{% block title %} Event Posts {% endblock %}
+
+{% block event_data %}
+<div class="row">
+    <div class="col-md-8 offset-md-2 col-sm-10 offset-sm-10">
+        {% if current_user.profile and (current_user.profile.id in event.members or event.host.id == current_user.profile.id) %}
+        <div class="row">
+            <div class="card card-body shadow-card m-2">
+                <div class="d-flex align-items-center">
+                    <img src="{{ url_for('static', filename=current_user.profile.profile_photo) }}"
+                        class="host-img-post">
+                    <div class="ms-2">
+                        <div class="fw-bold my-0">
+                            {{ current_user.profile.get_fullname() }}
+                        </div>
+                        <div style="font-size: 0.7rem">{{ current_user.role.value }}</div>
+                    </div>
+                </div>
+                <textarea type="text" class="form-control mt-2 input-box w-100" placeholder="Write a post..." data-eventId="{{ event.id }}" data-profileId="{{ current_user.profile.id }}" style="height: 100px;" id="post-input-box"></textarea>
+                <button class="btn btn-sm btn-dark mt-1" id="post-input-submit">Create post</button>
+            </div>
+        </div>
+        {% endif %}
+        <div class="mt-2" id="post-holder">
+            {% if len(posts) == 0 %}
+            <p class="text-center fw-bold">No post created</p>
+            {% else %}
+            {% for post in posts %}
+            <div class="card card-body shadow-card mt-2" id="card-post-{{ post.id }}">
+                {% include "events/view-event/post-sub-file/post-card.html" %}
+            </div>
+            {% endfor %}
+            {% endif %}
+        </div>
+    </div>
+    {% endblock %}

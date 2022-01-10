@@ -1,0 +1,84 @@
+{% extends "profiles/account-settings-layout.html" %}
+
+{% block title %} Change profile info {% endblock %}
+
+{% block settings %}
+<h2 class="settings-header">Change profile info</h2>
+<div class="card card-body shadow-card p-4">
+    <form method="POST">
+        {{ form.hidden_tag() }}
+        <div>
+            {{ form.bio.label(class="form-label mb-0") }}
+            {% if form.bio.errors %}
+            {{ form.bio(class="form-control input-box is-invalid bio-edit", id="bio") }}
+            <div class="invalid-feeedback">
+                {% for error in form.bio.errors %}
+                <span>{{ error }}</span>
+                {% endfor %}
+            </div>
+            {% else %}
+            {{ form.bio(class="form-control input-box bio-edit", id="bio") }}
+            {% endif %}
+        </div>
+        <div class="row g-2 mt-2">
+            <div class="col">
+                {{ form.first_name.label(class="form-label mb-0") }}
+                {% if form.first_name.errors %}
+                {{ form.first_name(class="form-control input-box is-invalid", id="first_name")}}
+                <div class="invalid-feedback">
+                    {% for error in form.first_name.errors %}
+                    <span>{{ error }}</span>
+                    {% endfor %}
+                </div>
+                {% else %}
+                {{ form.first_name(class="form-control input-box", id="first_name") }}
+                {% endif %}
+            </div>
+            <div class="col">
+                {{ form.last_name.label(class="form-label mb-0")}}
+                {% if form.last_name.errors %}
+                {{ form.last_name(class="form-control input-box is-invalid", id="last_name")}}
+                <div class="invalid-feedback">
+                    {% for error in form.last_name.errors %}
+                    <span>{{ error }}</span>
+                    {% endfor %}
+                </div>
+                {% else %}
+                {{ form.last_name(class="form-control input-box", id="last_name")}}
+                {% endif %}
+            </div>
+        </div>
+        <div class="row g-2 mt-1">
+            <div class="col-6">
+                {{ form.nid.label(class="form-label mb-0") }}
+                {% if form.nid.errors %}
+                {{ form.nid(class="form-control input-box is-invalid", id="nid")}}
+                <div class="invalid-feedback">
+                    {% for error in form.nid.errors %}
+                    <span>{{ error }}</span>
+                    {% endfor %}
+                </div>
+                {% else %}
+                {{ form.nid(class="form-control input-box", id="nid") }}
+                {% endif %}
+            </div>
+            <div class="col-6">
+                {{ form.dob.label(class="form-label mb-0") }}
+                {% if form.dob.errors %}
+                {{ form.dob(class="form-control input-box is-invalid", id="dob")}}
+                <div class="invalid-feedback">
+                    {% for error in form.dob.errors %}
+                    <span>{{ error }}</span>
+                    {% endfor %}
+                </div>
+                {% else %}
+                {{ form.dob(class="form-control input-box", id="dob") }}
+                {% endif %}
+            </div>
+        </div>
+        <div class="mt-2">
+            {{form.save(class="btn btn-dark btn-update")}}
+        </div>
+    </form>
+</div>
+{% endblock %}

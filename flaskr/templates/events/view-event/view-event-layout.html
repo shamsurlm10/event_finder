@@ -1,0 +1,120 @@
+{% extends "layout.html" %}
+{% block title %} Event {% endblock %}
+
+{% block add_styles %}
+<link rel="stylesheet" href="{{ url_for('static', filename='styles/events/view-event.css') }}">
+{% endblock %}
+
+{% block content %}
+<div class="container-fluid px-0 cover-bg">
+    <div class="container cover-location">
+        <img class="event-image" src="{{ url_for('static', filename=event.cover_photo) }}" alt="event_image">
+        <div class="card card-body location-name">
+            <span>{{ event.place_name }}</span>
+        </div>
+    </div>
+</div>
+<div class="container mt-2">
+    <div class="d-flex">
+        <div>
+            <div class="event-time text-uppercase">
+                {{ event.get_start_date_time_str() }}
+            </div>
+            <h1 class="event-name-style">
+                {{ event.title }}
+            </h1>
+        </div>
+        <div class="ms-auto align-self-center">
+            {% if current_user.profile %}
+            {% if current_user.profile and current_user.profile.is_event_bookmarked(event.id) %}
+            <a href="{{ url_for('profiles.unbookmark_event', id=event.id) }}"
+                title="Remove the event from bookmarked list." class="btn btn-sm btn-dark">
+                <i class="fas fa-bookmark"></i>
+            </a>
+            {% else %}
+            <a href="{{ url_for('profiles.bookmark_event', id=event.id) }}"
+                title="Bookmark the event." class="btn btn-sm btn-dark">
+                <i class="far fa-bookmark"></i>
+            </a>
+            {% endif %}
+            {% endif %}
+            {% if current_user.profile and current_user.profile.id == event.host.id %}
+            <a href="{{ url_for('events.event_info', id=event.id) }}"
+                title="Edit the events info." class="btn btn-sm btn-dark">
+                <i class="fas fa-cog"></i>
+            </a>
+            {% endif %}
+            <button class="btn btn-sm btn-dark" title="Click to copy the event link.">
+                <i class="fas fa-share-alt"></i>
+            </button>
+            {% if current_user.profile %}
+            {% if not event.event_status().status %}
+            <button class="btn btn-sm btn-danger">Registration Closed</button>
+            {% elif current_user.profile.id == event.host.id %}
+            <button class="btn btn-sm btn-dark">Hosting</button>
+            {% elif event.is_profile_going(current_user.profile.id) %}
+            <button class="btn btn-sm btn-dark"><i class="fas fa-check"></i> Registered</button>
+            {% elif event.is_profile_pending(current_user.profile.id) %}
+            <button class="btn btn-sm btn-dark"><i class="far fa-clock"></i> Pending</button>
+            {% else %}
+            <button class="btn btn-sm btn-dark" data-bs-toggle="modal" data-bs-target="#event-register-modal">
+                <i class="fas fa-signature"></i> Register
+            </button>
+            {% endif %}
+            {% endif %}
+        </div>
+    </div>
+
+    <ul class="nav nav-pills mt-1 mb-3">
+        <li class="nav-item me-1 text-center">
+            <a class="nav-link btn-sm btn-nav {{ 'active' if active == 'details' }}"
+                href="{{ url_for('events.view_event', id=event.id, filter='details') }}">Details</a>
+        </li>
+        <li class="nav-item me-1 text-center">
+            <a class="nav-link btn-sm btn-nav {{ 'active' if active == 'posts' }}"
+                href="{{ url_for('events.view_event', id=event.id, filter='posts') }}">Event Posts</a>
+        </li>
+        <!-- <li class="nav-item me-1 text-center">
+            <a class="nav-link btn-sm btn-nav {{ 'active' if active == 'messages' }}"
+                href="{{ url_for('events.view_event', id=event.id, filter='messages') }}">Message Box</a>
+        </li> -->
+        <li class="nav-item me-1 text-center">
+            <a class="nav-link btn-sm btn-nav {{ 'active' if active == 'members' }}"
+                href="{{ url_for('events.view_event', id=event.id, filter='members') }}">Members</a>
+        </li>
+    </ul>
+
+    {% block event_data %} {% endblock %}
+    <!-- Register modal -->
+    <div class="modal fade" id="event-register-modal" tabindex="-1" aria-labelledby="event-register-modal"
+        aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content">
+                <div class="modal-header modal-header-custom">
+                    <h5 class="modal-title" id="event-register-modal">
+                        Register in the event
+                    </h5>
+                    <button type="button" class="btn" data-bs-dismiss="modal" aria-label="Close"><i
+                            class="bi bi-x-lg"></i></button>
+                </div>
+                <h6 class="ms-3 text-muted mb-0">Please fill out the form</h6>
+                <div class="container">
+                    <form action="{{ url_for('events.register_for_event', id=event.id) }}" class="mt-2 mb-4 px-2"
+                        method="POST">
+                        <strong class="text-highlighted">
+                            Please send {{ event.fee }} taka to {{ recive_number }} via Bkash, Nagad, Ucash to procced
+                            the registration.
+                        </strong>
+                        <div class="form-floating my-2">
+                            <input type="text" class="form-control input-box" id="trxn-id" placeholder="Trxn ID" name="trnx_id">
+                            <label for="trxn-id">Trxn ID</label>
+                        </div>
+                        <button type="submit" class="btn btn-sm btn-primary">Submit</button>
+                        <button type="button" class="btn btn-sm btn-dark me-2" data-bs-dismiss="modal">Close</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

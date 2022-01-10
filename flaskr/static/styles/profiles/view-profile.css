@@ -1,0 +1,130 @@
+.cover-photo {
+    border-radius: 5px;
+    height: 150px;
+    width: 100%;
+}
+
+.social-link > a {
+    text-decoration: none;
+}
+
+button.active {
+    background-color: #101010 !important;
+    color: #f5f4f4 !important;
+}
+
+.profile-photo {
+    border: 1px solid #f5f4f4;
+    margin-top: -75px;
+    border-radius: 50%;
+    height: 150px;
+    width: 150px;
+    margin-left: 25px;
+}
+
+.sm-screen-hide {
+    display: none !important;
+}
+
+.d-flex-custom {
+    display: block;
+}
+
+.side-btn {
+    width: 120px;
+}
+
+.profile-info {
+    text-align: center;
+}
+
+.name {
+    font-size: 1.4rem;
+    font-weight: bold;
+    margin-bottom: 1px;
+}
+
+.info {
+    margin: 0;
+    font-size: 0.8rem;
+}
+
+.profile-header {
+    padding-top: 10px;
+    font-size: 1.4rem;
+    font-weight: bold;
+    margin-bottom: 10px;
+}
+
+.review-write-btn {
+    width: 100px;
+    height: 30px;
+    font-size: 0.9rem;
+    border: 0;
+    border-radius: 25px;
+    background-color: transparent;
+}
+
+.review-card {
+    border: 0;
+    border-radius: 10px;
+    background-color: #F8F9FA;
+    box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.2), 0 1px 5px 0 rgba(0, 0, 0, 0.05);
+}
+
+.link-logo {
+    font-size: 30px;
+    color: #101010;
+    text-decoration: none;
+}
+
+@media only screen and (min-width: 451px) {
+    .cover-photo {
+        border-radius: 7px;
+        height: 200px;
+    }
+}
+
+@media only screen and (min-width: 768px) {
+    .cover-photo {
+        border-radius: 10px;
+        height: 260px;
+    }
+
+    .profile-info {
+        text-align: justify;
+    }
+
+    .sm-screen-only {
+        display: none !important;
+    }
+
+    .sm-screen-hide {
+        display: block !important;
+    }
+
+    .profile-photo-container {
+        width: fit-content;
+    }
+
+    .d-flex-custom {
+        display: flex;
+    }
+    
+    .profile-photo {
+        border: 2px solid #f5f4f4;
+        margin-top: -110px;
+        margin-left: 30px;
+        margin-right: 15px;
+        height: 200px;
+        width: 200px;
+    }
+}
+
+
+@media only screen and (min-width: 990px) {
+    .cover-photo {
+        border-radius: 10px;
+        height: 260px;
+    }
+}
